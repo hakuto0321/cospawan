@@ -41,8 +41,8 @@ export interface DataSource {
   getProductsForPet(pet: Pet): Promise<ProductWithOffers[]>;
   /** 掲載中の商品1件。見つからなければ null */
   getProduct(jan: string): Promise<ProductWithOffers | null>;
-  /** 掲載中の全商品の JAN（商品ページを前もって作るため） */
-  listProductJans(): Promise<string[]>;
+  /** 掲載中の全商品（sitemap や llms.txt 用） */
+  getAllProducts(): Promise<ProductWithOffers[]>;
   /** 開催中か、これから始まるセール（開始が早い順） */
   getUpcomingEvents(now: Date): Promise<SaleEvent[]>;
 }

@@ -20,8 +20,8 @@ import { SITE_URL } from "@/lib/site";
 type Props = { params: Promise<{ jan: string }> };
 
 export async function generateStaticParams() {
-  const jans = await getDataSource().listProductJans();
-  return jans.map((jan) => ({ jan }));
+  const items = await getDataSource().getAllProducts();
+  return items.map((i) => ({ jan: i.product.jan }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

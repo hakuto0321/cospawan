@@ -129,8 +129,8 @@ export const mockDataSource: DataSource = {
   async getProduct(jan) {
     return all.find((p) => p.product.jan === jan) ?? null;
   },
-  async listProductJans() {
-    return all.map((p) => p.product.jan);
+  async getAllProducts() {
+    return all;
   },
   async getUpcomingEvents(now) {
     return events
