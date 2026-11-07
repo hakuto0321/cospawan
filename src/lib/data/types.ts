@@ -34,7 +34,7 @@ export type SaleEvent = {
   bonusRate: number | null;
 };
 
-/** 画面が使うデータの取り出し口。C1 で Supabase 版に差し替える */
+/** 画面が使うデータの取り出し口。仮データ（mock.ts）と Supabase（supabase.ts）の2つがある */
 export interface DataSource {
   /** 仮データのときは true（画面に注意書きを出す） */
   readonly isMock: boolean;

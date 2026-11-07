@@ -26,7 +26,7 @@ export type HistoryRow = {
 
 export type RunStatus = "succeeded" | "failed";
 
-/** バッチが読み書きする先。C1 で Supabase 版を作る */
+/** バッチが読み書きする先。メモリ（memoryRepo.ts）と Supabase（supabaseRepo.ts）の2つがある */
 export interface BatchRepository {
   listActiveProducts(): Promise<BatchProduct[]>;
   getLatestOffers(productId: number): Promise<StoredOffer[]>;

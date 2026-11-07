@@ -6,7 +6,7 @@ export type UsageEvent =
 
 export type WaitlistResult = "created" | "duplicate";
 
-/** 書き込み先。C1 で Supabase 版に差し替える */
+/** 書き込み先。メモリ（memory.ts）と Supabase（supabase.ts）の2つがある */
 export interface EventStore {
   readonly name: string;
   recordUsageEvent(event: UsageEvent): Promise<void>;

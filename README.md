@@ -21,7 +21,11 @@ npm install
 cp .env.example .env.local
 ```
 
-`.env.local` はコミットされません。キーなどはここに入れます。空のままでも、仮データで画面を確かめられます。
+`.env.local` はコミットされません。キーなどはここに入れます。
+
+- **Supabase のキーが空のとき**：プログラムの中の仮データで画面が出ます。送客クリックと事前登録はサーバーのメモリに保存し、止めると消えます
+- **Supabase のキーを入れたとき**：開発用の DB から読み書きします（入れ方は下の「データベース（Supabase）」）
+- キーを入れたまま仮データにしたいときは、`DATA_SOURCE=mock` を入れます
 
 ### 2. 立ち上げる
 
@@ -53,8 +57,9 @@ npm run dev
 - **JavaScript なし**：開発者ツールで JavaScript を切っても、内容が読めるか
 - **全ページ共通**：ヘッダーの「広告を含みます」、フッターの規約リンクと「Web Services by Yahoo! JAPAN」
 
-いまの画面は**仮データ**です（画面上部に「開発中：…仮のデータです」と出ます）。商品名・ショップ・価格はすべて架空です。
-送客クリックの記録と事前登録のメールも、いまは**サーバーのメモリに保存**しています。`npm run dev` を止めると消えます。Supabase につないだら（タスク C1）、DB に保存するように切り替えます。
+いまの画面の商品名・ショップ・価格は、すべて架空です。仮データのときは、画面上部に「開発中：…仮のデータです」と出ます。開発用の DB のときは、商品名に【仮】と付いています。
+
+DB につないでいるときは、送客クリックと事前登録が DB に残ります。Supabase の画面の Table Editor で、`usage_events` と `waitlist` の表を開くと確かめられます。
 
 ### 4. 本番に近い形で確かめる
 
@@ -97,7 +102,7 @@ curl -X POST -H "x-revalidate-secret: 合言葉" http://localhost:8787/api/reval
 ```
 
 - ログに `DOShardedTagCache ... no such Durable Object class` という赤い警告が出ることがあります。これは、補助のために一時的に立ち上がる Worker が出すもので、問題ありません（本体の Worker にはこの部品が含まれています）。
-- 送客クリックと事前登録は、いまはメモリ保存なので、ここでは残りません（C1 で Supabase に切り替えます）。
+- `.env.local` の Supabase のキーは、ビルドのときに読み込まれます。
 
 ---
 
@@ -144,7 +149,13 @@ npm run try:fetch -- 4902000000000
 npm run batch -- --fake
 ```
 
-保留の動きを確かめるときは、特定の商品・モールの価格を変えて動かします（例：楽天の価格を40%にする）。
+**開発用の DB に保存して試す**ときは、`--fake-malls` を付けます。楽天・Yahoo!の代わりに仮の価格を使い、DB の `offers_latest`・`price_history`・`batch_runs` に書き込みます。モールのキーがなくても使えます。GitHub Actions（本番）では使えないようにしてあります。
+
+```bash
+npm run batch -- --fake-malls
+```
+
+保留の動きを確かめるときは、特定の商品・モールの価格を変えて動かします（例：楽天の価格を40%にする）。`--fake` でも `--fake-malls` でも使えます。
 
 ```bash
 npm run batch -- --fake --change 2000000000015:rakuten:0.4
@@ -154,7 +165,7 @@ npm run batch -- --fake --change 2000000000015:rakuten:0.4
 
 - 保留は「最後に公開した価格」と比べます。保留した価格を基準にしないので、異常な価格が次の回に公開されてしまうことはありません。
 - 取得に失敗したモールは、前回の価格を残します。失敗が2割以上なら「失敗」で終わり、GitHub Actions がオーナーに知らせます（C6）。
-- 本番の流れ（`npm run batch`）は、Supabase につないでから（C1）使えます。
+- 本番の流れ（`npm run batch`）は、楽天・Yahoo!のキーと Supabase のキーがそろうと使えます。ページの作り直しは、`NEXT_PUBLIC_SITE_URL` と `REVALIDATE_SECRET` があるときだけ行います。
 
 ### 定期実行とお知らせ（GitHub Actions）
 
@@ -166,7 +177,7 @@ npm run batch -- --fake --change 2000000000015:rakuten:0.4
 Issue が立つと、GitHub からオーナーにメールが届きます。どちらも、リポジトリの Settings → Secrets and variables → Actions で設定するまでは、定時実行では動きません（Actions の画面から手動で実行することはできます）。
 
 - **Variables**：`BATCH_ENABLED` = `true`、`FRESHNESS_CHECK_ENABLED` = `true`、`NEXT_PUBLIC_SITE_URL` = 本番のURL
-- **Secrets**：`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`、`YAHOO_CLIENT_ID`、`VALUECOMMERCE_ID`、`REVALIDATE_SECRET`、（C1 のあと）`NEXT_PUBLIC_SUPABASE_URL`、`SUPABASE_SECRET_KEY`
+- **Secrets**：`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`、`YAHOO_CLIENT_ID`、`VALUECOMMERCE_ID`、`REVALIDATE_SECRET`、`NEXT_PUBLIC_SUPABASE_URL`、`SUPABASE_SECRET_KEY`
 
 このリポジトリは公開されているので、Issue と Actions の実行記録は誰でも読めます。秘密の値は GitHub が実行記録の中で伏せてくれますが、Issue にはログを貼らないようにしています。
 
