@@ -1,0 +1,136 @@
+/* デザイン「B やさしく温かい」案 */
+:root {
+  --bg: #fff6ef;
+  --card: #ffffff;
+  --text: #3b2f2a;
+  --text-sub: #7a6a62;
+  --accent: #f08a4b;
+  --button: #b5541f;
+  --button-text: #ffffff;
+  --deal: #3f7a57;
+  --deal-bg: #e4f2e8;
+  --low: #8e3f14;
+  --low-bg: #ffe7d6;
+
+  --radius-card: 22px;
+  --radius-pill: 999px;
+
+  --content-width: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-zen-maru), "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 500;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+/* 価格の数字は桁をそろえる */
+.price {
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+}
+
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.button {
+  display: inline-block;
+  background: var(--button);
+  color: var(--button-text);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chip {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 2px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.chip-deal {
+  background: var(--deal-bg);
+  color: var(--deal);
+}
+
+.chip-low {
+  background: var(--low-bg);
+  color: var(--low);
+}
+
+.sub {
+  color: var(--text-sub);
+}
+
+/* 共通ヘッダー・フッター */
+.site-header {
+  padding: 12px 0;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.site-logo {
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.ad-notice {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.site-main {
+  padding: 16px 0 48px;
+}
+
+.site-footer {
+  padding: 24px 0 32px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
