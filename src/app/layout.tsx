@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Zen_Maru_Gothic } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const zenMaru = Zen_Maru_Gothic({
@@ -11,6 +12,7 @@ const zenMaru = Zen_Maru_Gothic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "ポチどき｜いつものペット用品、今が買いどき？",
     template: "%s｜ポチどき",

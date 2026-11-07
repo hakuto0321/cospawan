@@ -292,3 +292,148 @@ h2 {
 .event-banner span {
   font-size: 0.85rem;
 }
+
+/* 商品ページ */
+.breadcrumb {
+  margin: 0;
+}
+
+.product-title {
+  font-size: 1.4rem;
+}
+
+.lead {
+  margin: 0;
+  padding: 4px 0 4px 14px;
+  border-left: 5px solid var(--accent);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chips:empty {
+  display: none;
+}
+
+.chip-neutral {
+  background: var(--card);
+  color: var(--text-sub);
+}
+
+.button-wide {
+  display: block;
+  text-align: center;
+  padding: 14px 20px;
+}
+
+.button-ghost {
+  background: var(--card);
+  color: var(--button);
+  border: 2px solid var(--button);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.shops {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.shops th,
+.shops td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--bg);
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.shops th:first-child,
+.shops td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.shops th {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.shops .mall {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-sub);
+}
+
+.shops .eff {
+  font-weight: 900;
+}
+
+.shops tr.top .eff {
+  color: var(--deal);
+}
+
+.faq {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.faq dt {
+  font-weight: 700;
+}
+
+.faq dd {
+  margin: 2px 0 0;
+  color: var(--text-sub);
+}
+
+/* 狭い画面では、1ショップを「ショップ名」と「数字4つ」の2段にする */
+@media (max-width: 560px) {
+  .shops thead {
+    display: none;
+  }
+
+  .shops tr {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px 6px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bg);
+  }
+
+  .shops td {
+    padding: 0;
+    border: none;
+    text-align: left;
+  }
+
+  .shops td:first-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
+  .shops td:first-child .mall {
+    display: inline;
+  }
+
+  .shops td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+  }
+}

@@ -126,6 +126,12 @@ export const mockDataSource: DataSource = {
   async getProductsForPet(pet) {
     return all.filter((p) => matchesPet(p.product.petType, pet));
   },
+  async getProduct(jan) {
+    return all.find((p) => p.product.jan === jan) ?? null;
+  },
+  async listProductJans() {
+    return all.map((p) => p.product.jan);
+  },
   async getUpcomingEvents(now) {
     return events
       .filter((e) => new Date(e.endsAt) > now)

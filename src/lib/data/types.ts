@@ -39,6 +39,10 @@ export interface DataSource {
   /** 仮データのときは true（画面に注意書きを出す） */
   readonly isMock: boolean;
   getProductsForPet(pet: Pet): Promise<ProductWithOffers[]>;
+  /** 掲載中の商品1件。見つからなければ null */
+  getProduct(jan: string): Promise<ProductWithOffers | null>;
+  /** 掲載中の全商品の JAN（商品ページを前もって作るため） */
+  listProductJans(): Promise<string[]>;
   /** 開催中か、これから始まるセール（開始が早い順） */
   getUpcomingEvents(now: Date): Promise<SaleEvent[]>;
 }
