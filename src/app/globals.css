@@ -134,3 +134,161 @@ a {
   gap: 8px 16px;
   margin-bottom: 8px;
 }
+
+/* 共通の並び */
+h1,
+h2 {
+  font-weight: 900;
+  line-height: 1.4;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.stack {
+  display: grid;
+  gap: 10px;
+}
+
+.stack-lg {
+  display: grid;
+  gap: 20px;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.price-inline {
+  font-variant-numeric: tabular-nums;
+}
+
+/* トップ */
+.hero h1 {
+  font-size: 1.6rem;
+}
+
+.hero p {
+  margin: 6px 0 0;
+}
+
+.mock-notice {
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--low-bg);
+  color: var(--low);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.seg {
+  display: inline-flex;
+  background: var(--card);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+
+.seg a {
+  padding: 4px 18px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+.seg a[aria-current="page"] {
+  background: var(--button);
+  color: var(--button-text);
+}
+
+.deal {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.deal:hover,
+.deal:focus-visible {
+  border-color: var(--accent);
+}
+
+.deal-featured {
+  border-color: var(--accent);
+  padding: 18px 20px;
+}
+
+.deal-main {
+  display: grid;
+  min-width: 0;
+}
+
+.deal-category {
+  font-size: 0.8rem;
+}
+
+.deal-name {
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.deal-price {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+
+.deal-yen {
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+.deal-featured .deal-yen {
+  font-size: 1.8rem;
+}
+
+.deal-where {
+  font-size: 0.75rem;
+}
+
+.deal-why {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 0.85rem;
+}
+
+.deal-why:empty {
+  display: none;
+}
+
+.event-banner {
+  display: grid;
+  gap: 2px;
+  background: var(--card);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+}
+
+.event-banner span {
+  font-size: 0.85rem;
+}

@@ -48,6 +48,9 @@ export default function RootLayout({
             <p>
               当サイトはアフィリエイト広告を利用しています。価格は取得日時時点のもので、変わることがあります。
             </p>
+            <p>
+              <a href="https://developer.yahoo.co.jp/sitemap/">Web Services by Yahoo! JAPAN</a>
+            </p>
           </div>
         </footer>
       </body>
