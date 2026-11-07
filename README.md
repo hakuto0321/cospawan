@@ -72,6 +72,33 @@ npm start
 
 同じく http://localhost:3000 で開きます。
 
+### 5. Cloudflare と同じしくみで確かめる
+
+本番は Cloudflare Workers で動きます（OpenNext を使用）。手元の Cloudflare 互換環境で、本番に一番近い形で確かめられます。Cloudflare のアカウントは要りません。
+
+はじめの1回だけ、手元用の設定ファイルを作ります。
+
+```bash
+cp .dev.vars.example .dev.vars
+```
+
+`.dev.vars` の `REVALIDATE_SECRET` には、適当な長い文字列を入れます。`npm run dev` を止めてから、次を実行します。
+
+```bash
+npm run preview
+```
+
+http://localhost:8787 で開きます。ビルドに1〜2分かかります。
+
+- バッチ後の「ページの作り直し」も、ここで確かめられます（合言葉は `.dev.vars` の値）。
+
+```bash
+curl -X POST -H "x-revalidate-secret: 合言葉" http://localhost:8787/api/revalidate
+```
+
+- ログに `DOShardedTagCache ... no such Durable Object class` という赤い警告が出ることがあります。これは、補助のために一時的に立ち上がる Worker が出すもので、問題ありません（本体の Worker にはこの部品が含まれています）。
+- 送客クリックと事前登録は、いまはメモリ保存なので、ここでは残りません（C1 で Supabase に切り替えます）。
+
 ---
 
 ## 自動テスト

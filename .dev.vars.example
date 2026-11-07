@@ -1,0 +1,4 @@
+# コピーして .dev.vars を作る（npm run preview のときに Worker に渡る値。コミットしない）
+NEXTJS_ENV=development
+# ページを作り直す合言葉（.env.local の REVALIDATE_SECRET と同じにする）
+REVALIDATE_SECRET=

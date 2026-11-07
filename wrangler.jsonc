@@ -1,0 +1,44 @@
+// Cloudflare Workers の設定（OpenNext で Next.js を動かす）
+// https://opennext.js.org/cloudflare/get-started
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pochidoki",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "pochidoki"
+    }
+  ],
+  // 作ったページの保存先。バッチ後の作り直し（revalidatePath）に必要
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "pochidoki-next-cache"
+    }
+  ],
+  // 作り直しの記録先（DBの準備が要らない Durable Object 版）
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_TAG_CACHE_DO_SHARDED",
+        "class_name": "DOShardedTagCache"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOShardedTagCache"]
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
