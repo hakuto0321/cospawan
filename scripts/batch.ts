@@ -2,14 +2,19 @@
 //   npm run batch -- --fake                       仮データで最後まで動かす（何も保存しない）
 //   npm run batch -- --fake --change 2000000000015:rakuten:0.4
 //                                                 その商品の楽天の価格を 40% にして、保留を確かめる
-//   npm run batch                                  本番の流れ（C1 で Supabase につないでから使える）
+//   npm run batch                                  本番の流れ（楽天・Yahoo! から取り、Supabase に保存する）
+//   npm run batch -- --fake-malls                  モールの代わりに仮データを使い、Supabase（開発用）に保存する
+//                                                 （モールのキーがなくても DB への保存を確かめられる。CI では使えない）
 // 失敗したとき（取得の失敗が多いときを含む）は終了コード 1 で終わる（GitHub Actions が知らせる）
 import { createFakeFetchers, createFetchersFromEnv } from "@/lib/batch/fetchers";
 import { createMemoryBatchRepo } from "@/lib/batch/memoryRepo";
+import { createRevalidator } from "@/lib/batch/revalidate";
 import { runBatch } from "@/lib/batch/run";
+import { createSupabaseBatchRepo } from "@/lib/batch/supabaseRepo";
 import type { StoredOffer } from "@/lib/batch/types";
 import { mockDataSource } from "@/lib/data/mock";
 import type { Mall } from "@/lib/pricing";
+import { getAdminClient } from "@/lib/supabase/client";
 
 try {
   process.loadEnvFile(".env.local");
@@ -52,19 +57,40 @@ async function fakeRun() {
   return runBatch({ repo, fetchers: createFakeFetchers(parseChanges()), log });
 }
 
-async function realRun(): Promise<never> {
-  // C1 で Supabase の保存先を作ったら、createRevalidator（サイトの作り直し）とあわせてここでつなぐ
-  const { missing } = createFetchersFromEnv(process.env);
+async function realRun(fakeMalls: boolean) {
+  const missing: string[] = [];
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missing.push("NEXT_PUBLIC_SUPABASE_URL");
+  if (!process.env.SUPABASE_SECRET_KEY) missing.push("SUPABASE_SECRET_KEY");
+
+  let fetchers;
+  if (fakeMalls) {
+    if (process.env.CI) {
+      console.error("--fake-malls は手元でだけ使えます（本番の DB に仮の価格を入れないため）");
+      process.exit(1);
+    }
+    fetchers = createFakeFetchers(parseChanges());
+  } else {
+    const fromEnv = createFetchersFromEnv(process.env);
+    missing.push(...fromEnv.missing);
+    fetchers = fromEnv.fetchers;
+  }
   if (missing.length > 0) {
     console.error(`キーが足りません: ${missing.join(", ")}`);
     process.exit(1);
   }
-  console.error("保存先（Supabase）がまだつながっていません。C1 のあとで使えます。いまは --fake で試してください。");
-  process.exit(1);
+
+  // サイトの作り直しは、URL と合言葉がそろっているときだけ行う
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const secret = process.env.REVALIDATE_SECRET;
+  if (!siteUrl || !secret) log("NEXT_PUBLIC_SITE_URL か REVALIDATE_SECRET がないので、ページの作り直しは飛ばします");
+  const revalidate = siteUrl && secret ? createRevalidator(siteUrl, secret) : undefined;
+
+  log(`保存先: ${new URL(process.env.NEXT_PUBLIC_SUPABASE_URL!).host}${fakeMalls ? "（モールは仮データ）" : ""}`);
+  return runBatch({ repo: createSupabaseBatchRepo(getAdminClient()), fetchers, revalidate, log });
 }
 
 async function main() {
-  const { status, stats } = args.includes("--fake") ? await fakeRun() : await realRun();
+  const { status, stats } = args.includes("--fake") ? await fakeRun() : await realRun(args.includes("--fake-malls"));
 
   console.log("\n==== 結果 ====");
   console.log(`状態: ${status === "succeeded" ? "成功" : "失敗"}`);
