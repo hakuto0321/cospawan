@@ -156,6 +156,22 @@ npm run batch -- --fake --change 2000000000015:rakuten:0.4
 - 取得に失敗したモールは、前回の価格を残します。失敗が2割以上なら「失敗」で終わり、GitHub Actions がオーナーに知らせます（C6）。
 - 本番の流れ（`npm run batch`）は、Supabase につないでから（C1）使えます。
 
+### 定期実行とお知らせ（GitHub Actions）
+
+| ワークフロー | いつ | すること |
+| --- | --- | --- |
+| 価格の自動更新（`.github/workflows/batch.yml`） | 毎日 7:10・12:10・20:10（日本時間。混雑で遅れることあり） | バッチを実行。失敗したら Issue を立てて知らせ、次に成功したら閉じる |
+| 価格の鮮度の見張り（`.github/workflows/freshness.yml`） | 3時間ごと | サイトの `/api/health` を確かめる。最終更新が12時間以上前か、サイトに届かなければ Issue で知らせ、戻ったら閉じる |
+
+Issue が立つと、GitHub からオーナーにメールが届きます。どちらも、リポジトリの Settings → Secrets and variables → Actions で設定するまでは、定時実行では動きません（Actions の画面から手動で実行することはできます）。
+
+- **Variables**：`BATCH_ENABLED` = `true`、`FRESHNESS_CHECK_ENABLED` = `true`、`NEXT_PUBLIC_SITE_URL` = 本番のURL
+- **Secrets**：`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`、`YAHOO_CLIENT_ID`、`VALUECOMMERCE_ID`、`REVALIDATE_SECRET`、（C1 のあと）`NEXT_PUBLIC_SUPABASE_URL`、`SUPABASE_SECRET_KEY`
+
+このリポジトリは公開されているので、Issue と Actions の実行記録は誰でも読めます。秘密の値は GitHub が実行記録の中で伏せてくれますが、Issue にはログを貼らないようにしています。
+
+手元で鮮度を確かめるときは、http://localhost:3000/api/health を開きます。12時間以上前なら HTTP 503 になります。
+
 ---
 
 ## データベース（Supabase）

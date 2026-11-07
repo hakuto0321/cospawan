@@ -1,0 +1,59 @@
+# 価格の鮮度の見張り：サイトの /api/health を外から確かめる
+# 最終更新が 12時間以上前（503）や、サイトに届かないときは Issue でオーナーに知らせる。
+# バッチが止まった場合も、ページの作り直しだけ失敗した場合も、利用者に見えている状態で気づける。
+#
+# 動かすには: Variables に FRESHNESS_CHECK_ENABLED = true と NEXT_PUBLIC_SITE_URL を入れる
+name: 価格の鮮度の見張り
+
+on:
+  schedule:
+    - cron: "40 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: vars.FRESHNESS_CHECK_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 最終更新を確かめる
+        id: health
+        shell: bash
+        env:
+          SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          if [ -z "$SITE_URL" ]; then
+            echo "NEXT_PUBLIC_SITE_URL が未設定です" >&2
+            exit 1
+          fi
+          status="$(curl -sS -o health.json -w '%{http_code}' --max-time 30 "${SITE_URL%/}/api/health" || echo 000)"
+          echo "HTTP $status"
+          cat health.json 2>/dev/null || true
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          [ "$status" = "200" ]
+
+      - name: 止まっていたらお知らせ
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="$(printf '価格の最終更新が12時間以上前か、サイトに届きませんでした（%s 確認、HTTP %s）。\n\n応答:\n```\n%s\n```\n\n実行の記録: %s' \
+            "$(TZ=Asia/Tokyo date '+%-m月%-d日 %H:%M')" \
+            "${{ steps.health.outputs.status }}" \
+            "$(cat health.json 2>/dev/null || echo '（応答なし）')" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}")"
+          .github/scripts/alert.sh open prices-stale "$body"
+
+      - name: 戻っていたらお知らせを閉じる
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          .github/scripts/alert.sh close prices-stale \
+            "$(TZ=Asia/Tokyo date '+%-m月%-d日 %H:%M') の確認で、価格の更新が戻っていました。"
