@@ -48,3 +48,6 @@ insert into price_history (product_id, mall, effective_price_min, top_offers, fe
 
 insert into events (mall, name, starts_at, ends_at, bonus_rate) values
   ('rakuten', '【仮】お買い物マラソン', now() + interval '3 days', now() + interval '10 days', 9);
+
+-- 公開中の価格は「最後に公開した価格」と同じ
+update offers_latest set reference_price = price where hold_reason is null;
