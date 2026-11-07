@@ -1,0 +1,41 @@
+# プルリクエストと main への push のたびに、lint・型チェック・テスト・ビルドを確かめる
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: lint
+        run: npm run lint
+
+      - name: 型チェック
+        run: npm run typecheck
+
+      - name: テスト
+        run: npm test
+
+      # Next.js のビルドも中で行う（Cloudflare 向けの設定でビルドする必要があるため、npm run build とは分けない）
+      - name: ビルド（Cloudflare 向け）
+        run: npx opennextjs-cloudflare build
