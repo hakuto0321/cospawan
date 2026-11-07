@@ -48,7 +48,7 @@ export default function RootLayout({
               <Link href="/contact">お問い合わせ・運営者</Link>
             </nav>
             <p>
-              当サイトはアフィリエイト広告を利用しています。価格は取得日時時点のもので、変わることがあります。
+              当サイトはアフィリエイト広告を利用しています。表示している価格・送料・ポイントは取得した時点のもので、実際の価格とちがうことがあります。購入の前に、必ずショップのページで確かめてください。
             </p>
             <p>
               <a href="https://developer.yahoo.co.jp/sitemap/">Web Services by Yahoo! JAPAN</a>
