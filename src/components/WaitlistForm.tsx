@@ -6,7 +6,7 @@ export function WaitlistForm({ jan }: { jan: string }) {
     <section className="waitlist stack">
       <h2>値下げのお知らせを受け取る</h2>
       <p className="small">
-        この商品が安くなったときに、メールでお知らせする機能を準備しています。いまはメールアドレスの登録だけ受け付けていて、始まったらお知らせします。
+        この商品が安くなったら、メールでお知らせします。いまは登録だけ受け付けていて、お知らせは準備ができしだい始めます。
       </p>
       <form method="post" action="/api/waitlist" className="waitlist-form">
         <input type="hidden" name="jan" value={jan} />
