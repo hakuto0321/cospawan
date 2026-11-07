@@ -45,7 +45,7 @@ export default function RootLayout({
             <nav>
               <Link href="/privacy">プライバシーポリシー</Link>
               <Link href="/terms">利用規約</Link>
-              <Link href="/contact">お問い合わせ</Link>
+              <Link href="/contact">お問い合わせ・運営者</Link>
             </nav>
             <p>
               当サイトはアフィリエイト広告を利用しています。価格は取得日時時点のもので、変わることがあります。

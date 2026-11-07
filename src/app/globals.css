@@ -437,3 +437,50 @@ h2 {
     color: var(--text-sub);
   }
 }
+
+/* 規約などの文章ページ */
+.prose {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 24px 22px;
+}
+
+.prose h1 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.prose h2 {
+  font-size: 1.05rem;
+  margin: 28px 0 8px;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 10px;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin-bottom: 4px;
+}
+
+.prose dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.prose dt {
+  font-weight: 700;
+}
+
+.prose dd {
+  margin: 0;
+}
