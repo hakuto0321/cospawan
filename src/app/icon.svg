@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="30" r="26" fill="#F08A4B"/>
+  <path d="M42 50 L54 62 L40 55 Z" fill="#F08A4B"/>
+  <text x="32" y="41" text-anchor="middle" font-family="Zen Maru Gothic, Hiragino Sans, sans-serif" font-size="32" font-weight="900" fill="#FFFFFF">¥</text>
+</svg>
