@@ -5,17 +5,7 @@ import { WaitlistForm } from "@/components/WaitlistForm";
 import { getDataSource } from "@/lib/data";
 import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 import { amazonHref, offerHref, OUTBOUND_REL } from "@/lib/outbound";
-import { cheapestOffer } from "@/lib/pricing";
-import {
-  buildFaq,
-  daysOfUse,
-  leadSentence,
-  PET_TYPE_LABEL,
-  productJsonLd,
-  shippingLabel,
-  shopRows,
-  unitPriceText,
-} from "@/lib/productPage";
+import { leadSentence, productJsonLd, productViewModel, shippingLabel } from "@/lib/productPage";
 import { SITE_URL } from "@/lib/site";
 
 type Props = { params: Promise<{ jan: string }> };
@@ -42,19 +32,9 @@ export default async function ProductPage({ params }: Props) {
   const item = await data.getProduct(jan);
   if (!item) notFound();
 
-  const { product, offers, previousMinEffectivePrice, fetchedAt } = item;
-  const best = cheapestOffer(offers);
-  const rows = shopRows(offers);
-  const faq = buildFaq(item);
-  const lead = leadSentence(item);
-  const unitPrice = best ? unitPriceText(best.effectivePrice, product.amount, product.unit) : null;
-  const days = daysOfUse(product.amount, product.defaultPerDay);
-  const drop =
-    best && previousMinEffectivePrice != null && previousMinEffectivePrice > best.effectivePrice
-      ? previousMinEffectivePrice - best.effectivePrice
-      : null;
+  const { product, fetchedAt } = item;
+  const { best, rows, faq, lead, unitPrice, days, drop, petLabel } = productViewModel(item);
   const jsonLd = productJsonLd(item, rows, faq, `${SITE_URL}/products/${jan}`);
-  const petLabel = product.petType ? `${PET_TYPE_LABEL[product.petType]}・` : "";
 
   return (
     <article className="stack-lg">

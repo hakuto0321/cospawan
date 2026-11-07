@@ -6,6 +6,7 @@ import {
   daysOfUse,
   leadSentence,
   productJsonLd,
+  productViewModel,
   shippingLabel,
   shopRows,
   unitPriceText,
@@ -120,5 +121,25 @@ describe("productJsonLd", () => {
       highPrice: 4300,
       offerCount: 4,
     });
+  });
+});
+
+describe("productViewModel", () => {
+  it("前回より安くなったときだけ差額を出し、個数から日数と1kgあたりを作る", () => {
+    const base = { ...item([["rakuten", "A", 2000]]), previousMinEffectivePrice: 2100 };
+    const v = productViewModel(base);
+    expect(v.drop).toBe(100);
+    expect(v.petLabel).toBe("犬・");
+    expect(v.days).toBe(Math.floor(base.product.amount! / base.product.defaultPerDay!));
+
+    const noDrop = productViewModel({ ...base, previousMinEffectivePrice: 1500 });
+    expect(noDrop.drop).toBeNull();
+  });
+
+  it("比較できる価格がないときは、最安も差額も出さない", () => {
+    const v = productViewModel(item([["rakuten", "A", 2000, "paid", null]]));
+    expect(v.best).toBeNull();
+    expect(v.drop).toBeNull();
+    expect(v.unitPrice).toBeNull();
   });
 });
