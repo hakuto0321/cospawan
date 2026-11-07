@@ -6,7 +6,8 @@
 - cospa1.net に同名のゲーミングPCブログ「コスパワン」がある（分野がちがい、商標の登録もない）。まぎらわしいので cospa1.com などの「1」の綴りは使わない
 - 旧名は使わない：「ポチどき」（pochidoki.jp に似た考え方のサイト「ポチドキ」があるため）、「PetStock」（海外に同名の大手ペット用品チェーンがあるため）
 - GitHub のリポジトリは hakuto0321/cospawan（旧名 pochidoki から変更。古いURLは自動で転送される）
-- 開発用 Supabase のプロジェクト名（pochidoki-dev）と、手元のフォルダ名（workspace/pochidoki）は旧名のまま残っている
+- 手元のフォルダは ~/workspace/cospawan（旧名 pochidoki から変更）
+- 開発用 Supabase のプロジェクト名（pochidoki-dev）は旧名のまま残っている
 楽天市場とYahoo!ショッピングの価格を1日3回自動で集め、送料とポイントを含めた「実質価格」で買い時と残りの量を知らせる。
 収益はアフィリエイト（楽天・Yahoo!・Amazon）。個人の副業として運営する。
 
