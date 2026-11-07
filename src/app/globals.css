@@ -1,0 +1,533 @@
+/* デザイン「B やさしく温かい」案 */
+:root {
+  --bg: #fff6ef;
+  --card: #ffffff;
+  --text: #3b2f2a;
+  --text-sub: #7a6a62;
+  --accent: #f08a4b;
+  --button: #b5541f;
+  --button-text: #ffffff;
+  --deal: #3f7a57;
+  --deal-bg: #e4f2e8;
+  --low: #8e3f14;
+  --low-bg: #ffe7d6;
+
+  --radius-card: 22px;
+  --radius-pill: 999px;
+
+  --content-width: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-zen-maru), "Hiragino Maru Gothic ProN", sans-serif;
+  font-weight: 500;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+/* 価格の数字は桁をそろえる */
+.price {
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+}
+
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.button {
+  display: inline-block;
+  background: var(--button);
+  color: var(--button-text);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.chip {
+  display: inline-block;
+  border-radius: var(--radius-pill);
+  padding: 2px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.chip-deal {
+  background: var(--deal-bg);
+  color: var(--deal);
+}
+
+.chip-low {
+  background: var(--low-bg);
+  color: var(--low);
+}
+
+.sub {
+  color: var(--text-sub);
+}
+
+/* 共通ヘッダー・フッター */
+.site-header {
+  padding: 12px 0;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.site-logo {
+  font-weight: 900;
+  font-size: 1.4rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.ad-notice {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.site-main {
+  padding: 16px 0 48px;
+}
+
+.site-footer {
+  padding: 24px 0 32px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+
+/* 共通の並び */
+h1,
+h2 {
+  font-weight: 900;
+  line-height: 1.4;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+.small {
+  font-size: 0.8rem;
+}
+
+.stack {
+  display: grid;
+  gap: 10px;
+}
+
+.stack-lg {
+  display: grid;
+  gap: 20px;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.price-inline {
+  font-variant-numeric: tabular-nums;
+}
+
+/* トップ */
+.hero h1 {
+  font-size: 1.6rem;
+}
+
+.hero p {
+  margin: 6px 0 0;
+}
+
+.mock-notice {
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--low-bg);
+  color: var(--low);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.seg {
+  display: inline-flex;
+  background: var(--card);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+
+.seg a {
+  padding: 4px 18px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+.seg a[aria-current="page"] {
+  background: var(--button);
+  color: var(--button-text);
+}
+
+.deal {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.deal:hover,
+.deal:focus-visible {
+  border-color: var(--accent);
+}
+
+.deal-featured {
+  border-color: var(--accent);
+  padding: 18px 20px;
+}
+
+.deal-main {
+  display: grid;
+  min-width: 0;
+}
+
+.deal-category {
+  font-size: 0.8rem;
+}
+
+.deal-name {
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.deal-price {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+
+.deal-yen {
+  font-size: 1.3rem;
+  line-height: 1.3;
+}
+
+.deal-featured .deal-yen {
+  font-size: 1.8rem;
+}
+
+.deal-where {
+  font-size: 0.75rem;
+}
+
+.deal-why {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 0.85rem;
+}
+
+.deal-why:empty {
+  display: none;
+}
+
+.event-banner {
+  display: grid;
+  gap: 2px;
+  background: var(--card);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+}
+
+.event-banner span {
+  font-size: 0.85rem;
+}
+
+/* 商品ページ */
+.breadcrumb {
+  margin: 0;
+}
+
+.product-title {
+  font-size: 1.4rem;
+}
+
+.lead {
+  margin: 0;
+  padding: 4px 0 4px 14px;
+  border-left: 5px solid var(--accent);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chips:empty {
+  display: none;
+}
+
+.chip-neutral {
+  background: var(--card);
+  color: var(--text-sub);
+}
+
+.button-wide {
+  display: block;
+  text-align: center;
+  padding: 14px 20px;
+}
+
+.button-ghost {
+  background: var(--card);
+  color: var(--button);
+  border: 2px solid var(--button);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.shops {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.shops th,
+.shops td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--bg);
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.shops th:first-child,
+.shops td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.shops th {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.shops .mall {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-sub);
+}
+
+.shops .eff {
+  font-weight: 900;
+}
+
+.shops tr.top .eff {
+  color: var(--deal);
+}
+
+.faq {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.faq dt {
+  font-weight: 700;
+}
+
+.faq dd {
+  margin: 2px 0 0;
+  color: var(--text-sub);
+}
+
+/* 狭い画面では、1ショップを「ショップ名」と「数字4つ」の2段にする */
+@media (max-width: 560px) {
+  .shops thead {
+    display: none;
+  }
+
+  .shops tr {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px 6px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--bg);
+  }
+
+  .shops td {
+    padding: 0;
+    border: none;
+    text-align: left;
+  }
+
+  .shops td:first-child {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
+  .shops td:first-child .mall {
+    display: inline;
+  }
+
+  .shops td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+  }
+}
+
+/* 規約などの文章ページ */
+.prose {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 24px 22px;
+}
+
+.prose h1 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.prose h2 {
+  font-size: 1.05rem;
+  margin: 28px 0 8px;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 10px;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin-bottom: 4px;
+}
+
+.prose dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.prose dt {
+  font-weight: 700;
+}
+
+.prose dd {
+  margin: 0;
+}
+
+/* 事前登録フォーム */
+.waitlist {
+  background: var(--deal-bg);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.waitlist p {
+  margin: 0;
+}
+
+.waitlist-form {
+  display: grid;
+  gap: 6px;
+}
+
+.waitlist-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.text-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  font: inherit;
+  padding: 10px 16px;
+  border: 2px solid #e8dcd3;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--text);
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ロボット避けの隠し欄 */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

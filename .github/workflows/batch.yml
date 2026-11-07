@@ -1,0 +1,75 @@
+# 価格の自動更新（C5 のバッチを 1日3回動かす）
+# 失敗したら Issue を立ててオーナーに知らせ、次に成功したら閉じる。
+#
+# 動かすには（リポジトリの Settings → Secrets and variables → Actions）:
+#   Variables: BATCH_ENABLED = true, NEXT_PUBLIC_SITE_URL = https://（本番のURL）
+#   Secrets:   RAKUTEN_APPLICATION_ID, RAKUTEN_ACCESS_KEY, RAKUTEN_AFFILIATE_ID,
+#              YAHOO_CLIENT_ID, VALUECOMMERCE_ID, REVALIDATE_SECRET,
+#              （C1 のあと）NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY
+name: 価格の自動更新
+
+on:
+  schedule:
+    # GitHub は UTC。日本時間 7:10 / 12:10 / 20:10（混雑で数分〜数十分遅れることがある）
+    - cron: "10 22 * * *"
+    - cron: "10 3 * * *"
+    - cron: "10 11 * * *"
+  workflow_dispatch:
+
+# 同時に2つ動かさない（前の回が終わるまで待つ）
+concurrency:
+  group: batch
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  batch:
+    # BATCH_ENABLED を true にするまでは、定時実行では動かさない（手動実行は動く）
+    if: vars.BATCH_ENABLED == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: バッチを実行
+        id: run
+        run: npm run batch
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_CLIENT_ID: ${{ secrets.YAHOO_CLIENT_ID }}
+          VALUECOMMERCE_ID: ${{ secrets.VALUECOMMERCE_ID }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+
+      - name: 失敗をお知らせ
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        # リポジトリが公開なので、Issue にはログを貼らない（実行の記録は GitHub が秘密の値を伏せて表示する）
+        run: |
+          body="$(printf '価格の自動更新が失敗しました（%s）。\n\n原因は実行の記録で確かめてください: %s' \
+            "$(TZ=Asia/Tokyo date '+%-m月%-d日 %H:%M')" "$RUN_URL")"
+          .github/scripts/alert.sh open batch-failed "$body"
+
+      - name: 成功したらお知らせを閉じる
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          .github/scripts/alert.sh close batch-failed \
+            "$(TZ=Asia/Tokyo date '+%-m月%-d日 %H:%M') の実行で成功しました。"
