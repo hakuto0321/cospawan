@@ -484,3 +484,50 @@ h2 {
 .prose dd {
   margin: 0;
 }
+
+/* 事前登録フォーム */
+.waitlist {
+  background: var(--deal-bg);
+  border-radius: var(--radius-card);
+  padding: 20px;
+}
+
+.waitlist p {
+  margin: 0;
+}
+
+.waitlist-form {
+  display: grid;
+  gap: 6px;
+}
+
+.waitlist-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.text-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  font: inherit;
+  padding: 10px 16px;
+  border: 2px solid #e8dcd3;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  color: var(--text);
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ロボット避けの隠し欄 */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

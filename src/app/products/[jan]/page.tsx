@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { WaitlistForm } from "@/components/WaitlistForm";
 import { getDataSource } from "@/lib/data";
 import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 import { amazonHref, offerHref, OUTBOUND_REL } from "@/lib/outbound";
@@ -84,13 +85,13 @@ export default async function ProductPage({ params }: Props) {
 
       {best && (
         <div className="stack">
-          <a className="button button-wide" href={offerHref(best)} rel={OUTBOUND_REL} target="_blank">
+          <a className="button button-wide" href={offerHref(jan, best)} rel={OUTBOUND_REL} target="_blank">
             {MALL_LABEL[best.mall]}の{best.shopName}で見る
           </a>
           {product.amazonUrl && (
             <a
               className="button button-ghost button-wide"
-              href={amazonHref(product.amazonUrl)}
+              href={amazonHref(jan)}
               rel={OUTBOUND_REL}
               target="_blank"
             >
@@ -118,7 +119,7 @@ export default async function ProductPage({ params }: Props) {
                 {rows.map((o, i) => (
                   <tr key={`${o.mall}-${o.itemCode}`} className={i === 0 && o.effectivePrice !== null ? "top" : undefined}>
                     <td>
-                      <a href={offerHref(o)} rel={OUTBOUND_REL} target="_blank">
+                      <a href={offerHref(jan, o)} rel={OUTBOUND_REL} target="_blank">
                         {o.shopName}
                       </a>
                       <span className="mall">{MALL_LABEL[o.mall]}</span>
@@ -139,6 +140,8 @@ export default async function ProductPage({ params }: Props) {
           </p>
         </section>
       )}
+
+      <WaitlistForm jan={jan} />
 
       <section className="card stack">
         <h2>よくある質問</h2>
