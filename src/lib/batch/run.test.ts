@@ -183,8 +183,8 @@ describe("decideStatus", () => {
 describe("createRevalidator", () => {
   it("合言葉をヘッダーに付けて POST する", async () => {
     const fetchImpl = vi.fn(async () => new Response("{}", { status: 200 }));
-    await createRevalidator("https://pochidoki.example/", "s3cret", fetchImpl as unknown as typeof fetch)();
-    expect(fetchImpl).toHaveBeenCalledWith("https://pochidoki.example/api/revalidate", {
+    await createRevalidator("https://cospawan.example/", "s3cret", fetchImpl as unknown as typeof fetch)();
+    expect(fetchImpl).toHaveBeenCalledWith("https://cospawan.example/api/revalidate", {
       method: "POST",
       headers: { "x-revalidate-secret": "s3cret" },
     });

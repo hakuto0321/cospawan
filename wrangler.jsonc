@@ -2,7 +2,7 @@
 // https://opennext.js.org/cloudflare/get-started
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "pochidoki",
+  "name": "cospawan",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -13,14 +13,14 @@
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "pochidoki"
+      "service": "cospawan"
     }
   ],
   // 作ったページの保存先。バッチ後の作り直し（revalidatePath）に必要
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "pochidoki-next-cache"
+      "bucket_name": "cospawan-next-cache"
     }
   ],
   // 作り直しの記録先（DBの準備が要らない Durable Object 版）

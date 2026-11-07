@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { buildRakutenRequest, fetchRakutenOffers, mentionsJan, parseRakutenResponse, RAKUTEN_ENDPOINT } from "./rakuten";
 
 const JAN = "4902000000017";
-const cfg = { applicationId: "app-id", accessKey: "secret-key", affiliateId: "aff", siteUrl: "https://pochidoki.example/" };
+const cfg = { applicationId: "app-id", accessKey: "secret-key", affiliateId: "aff", siteUrl: "https://cospawan.example/" };
 
 // 公式ドキュメントの項目名どおりに作った見本（formatVersion 2）
 const item = (o: Record<string, unknown>) => ({
@@ -31,7 +31,7 @@ describe("buildRakutenRequest", () => {
     expect(u.searchParams.get("affiliateId")).toBe("aff");
     expect(u.searchParams.get("sort")).toBe("+itemPrice");
     expect(u.searchParams.has("accessKey")).toBe(false); // URL に秘密を載せない
-    expect(headers).toEqual({ accessKey: "secret-key", Referer: "https://pochidoki.example/", Origin: "https://pochidoki.example" });
+    expect(headers).toEqual({ accessKey: "secret-key", Referer: "https://cospawan.example/", Origin: "https://cospawan.example" });
   });
 });
 

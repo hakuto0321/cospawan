@@ -10,7 +10,7 @@ kind="$2"   # 例: batch-failed / prices-stale
 body="$3"
 label="alert:${kind}"
 
-gh label create "$label" --color B5541F --description "ポチどきの自動お知らせ" --force >/dev/null
+gh label create "$label" --color B5541F --description "コスパワンの自動お知らせ" --force >/dev/null
 
 number="$(gh issue list --label "$label" --state open --limit 1 --json number --jq '.[0].number // empty')"
 
@@ -20,9 +20,9 @@ case "$action" in
       gh issue comment "$number" --body "$body"
     else
       case "$kind" in
-        batch-failed) title="【ポチどき】価格の自動更新が失敗しました" ;;
-        prices-stale) title="【ポチどき】価格が12時間以上更新されていません" ;;
-        *) title="【ポチどき】お知らせ: ${kind}" ;;
+        batch-failed) title="【コスパワン】価格の自動更新が失敗しました" ;;
+        prices-stale) title="【コスパワン】価格が12時間以上更新されていません" ;;
+        *) title="【コスパワン】お知らせ: ${kind}" ;;
       esac
       gh issue create --title "$title" --label "$label" --body "$body"
     fi
