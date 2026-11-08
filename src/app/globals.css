@@ -588,3 +588,80 @@ h2 {
   height: 1px;
   overflow: hidden;
 }
+
+/* トップ（見直し案）：見出しは1行、今日いちばんは大きく1つだけ押す、ほかは「もっと見る」 */
+.top-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.featured {
+  display: grid;
+  gap: 10px;
+  background: var(--card);
+  border: 2px solid var(--accent);
+  border-radius: 24px;
+  padding: 18px;
+}
+
+.featured-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.featured-thumb {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.featured-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.featured-name {
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.featured-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.featured-yen {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.featured-before {
+  font-size: 0.85rem;
+  color: var(--sub);
+  font-variant-numeric: tabular-nums;
+}
+
+.featured .button {
+  width: 100%;
+}
+
+.more summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.more[open] summary {
+  margin-bottom: 12px;
+}
