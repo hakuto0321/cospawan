@@ -17,7 +17,6 @@ const item = (
     size: null,
     unit: null,
     amount: null,
-    defaultPerDay: null,
     amazonUrl: null,
     reviewCount: null,
   },

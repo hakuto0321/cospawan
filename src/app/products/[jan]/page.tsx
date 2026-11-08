@@ -46,7 +46,7 @@ export default async function ProductPage({ params }: Props) {
   }
 
   const { product, fetchedAt } = item;
-  const { best, rows, faq, lead, unitPrice, days, drop, petLabel } = productViewModel(item);
+  const { best, rows, faq, lead, unitPrice, drop, petLabel } = productViewModel(item);
   const jsonLd = productJsonLd(item, rows, faq, `${SITE_URL}/products/${jan}`);
 
   return (
@@ -80,7 +80,6 @@ export default async function ProductPage({ params }: Props) {
         <div className="chips">
           {drop !== null && <span className="chip chip-deal">おトク 前日より{yen(drop)}安い</span>}
           {unitPrice && <span className="chip chip-neutral price-inline">{unitPrice}</span>}
-          {days !== null && <span className="chip chip-neutral price-inline">1つで約{days}日分</span>}
         </div>
       </header>
 

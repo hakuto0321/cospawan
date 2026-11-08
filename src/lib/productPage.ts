@@ -43,12 +43,6 @@ export function unitPriceText(effectivePrice: number, amount: number | null, uni
   return `1${unit}あたり約${perText}`;
 }
 
-/** 1個で何日分か。計算できなければ null */
-export function daysOfUse(amount: number | null, perDay: number | null): number | null {
-  if (!amount || !perDay) return null;
-  return Math.floor(amount / perDay);
-}
-
 /** モールごとの実質最安 */
 export function mallMins(offers: PricedOffer[]): Record<Mall, number | null> {
   const min = (mall: Mall) => rankOffers(offers.filter((o) => o.mall === mall))[0]?.effectivePrice ?? null;
@@ -79,14 +73,6 @@ export function buildFaq(item: ProductWithOffers): Faq[] {
       const q = product.unit === "g" ? "1kgあたりいくら？" : `1${product.unit}あたりいくら？`;
       faq.push({ q, a: `実質最安で買うと、${unit}です。` });
     }
-  }
-
-  const days = daysOfUse(product.amount, product.defaultPerDay);
-  if (days !== null) {
-    faq.push({
-      q: "1つで何日くらいもつ？",
-      a: `1日${product.defaultPerDay}${product.unit}使うとして、約${days}日分です。使う量によって変わります。`,
-    });
   }
 
   faq.push({
@@ -136,7 +122,6 @@ export function productViewModel(item: ProductWithOffers) {
     faq: buildFaq(item),
     lead: leadSentence(item),
     unitPrice: best ? unitPriceText(best.effectivePrice, product.amount, product.unit) : null,
-    days: daysOfUse(product.amount, product.defaultPerDay),
     // 前回の最安より安くなったときだけ、その差額を出す
     drop:
       best && previousMinEffectivePrice != null && previousMinEffectivePrice > best.effectivePrice
