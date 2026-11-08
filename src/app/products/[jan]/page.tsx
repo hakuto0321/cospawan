@@ -7,6 +7,7 @@ import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 import { amazonHref, offerHref, OUTBOUND_REL } from "@/lib/outbound";
 import { leadSentence, productJsonLd, productViewModel, shippingLabel } from "@/lib/productPage";
 import { SITE_URL } from "@/lib/site";
+import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 
 type Props = { params: Promise<{ jan: string }> };
 
@@ -31,6 +32,18 @@ export default async function ProductPage({ params }: Props) {
   const data = getDataSource();
   const item = await data.getProduct(jan);
   if (!item) notFound();
+
+  if (pricesPaused()) {
+    return (
+      <article className="stack-lg">
+        <header className="stack">
+          <h1 className="product-title">{item.product.name}</h1>
+        </header>
+        <p className="card">{PAUSED_MESSAGE}</p>
+        <WaitlistForm jan={jan} />
+      </article>
+    );
+  }
 
   const { product, fetchedAt } = item;
   const { best, rows, faq, lead, unitPrice, days, drop, petLabel } = productViewModel(item);

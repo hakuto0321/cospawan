@@ -40,6 +40,8 @@ export async function runBatch(opts: RunBatchOptions): Promise<RunBatchResult> {
     held: [],
     historyRows: 0,
     revalidated: false,
+    answered: {},
+    emptyAnswers: {},
   };
 
   try {
@@ -103,6 +105,8 @@ async function updateProduct(
   for (const { mall, result } of results) {
     // 取れなかったモールは前回のまま残す（取得日時が古いまま見える）
     if (!result) continue;
+    stats.answered![mall] = (stats.answered![mall] ?? 0) + 1;
+    if (result.total === 0) stats.emptyAnswers![mall] = (stats.emptyAnswers![mall] ?? 0) + 1;
     if (mall === "yahoo" && typeof result.reviewCount === "number") {
       await repo.updateReviewCount(product.id, result.reviewCount);
     }
@@ -148,12 +152,30 @@ async function updateProduct(
   }
 }
 
+/** 応答が空に偏っているモール（件数0が9割以上。5回以上応答があったとき）。API の形が変わった疑いがある */
+export const EMPTY_RATIO_LIMIT = 0.9;
+export const EMPTY_MIN_ANSWERS = 5;
+
+export function emptyMalls(stats: BatchStats): Mall[] {
+  const malls = Object.keys(stats.answered ?? {}) as Mall[];
+  return malls.filter((m) => {
+    const answered = stats.answered?.[m] ?? 0;
+    const empty = stats.emptyAnswers?.[m] ?? 0;
+    return answered >= EMPTY_MIN_ANSWERS && empty / answered >= EMPTY_RATIO_LIMIT;
+  });
+}
+
 export function decideStatus(stats: BatchStats): RunStatus {
+  if (emptyMalls(stats).length > 0) return "failed";
   if (stats.fetches === 0) return stats.products === 0 ? "succeeded" : "failed";
   return stats.fetchErrors.length / stats.fetches >= FAILURE_RATIO_LIMIT ? "failed" : "succeeded";
 }
 
 function summarizeErrors(stats: BatchStats): string {
+  const empty = emptyMalls(stats);
+  if (empty.length > 0) {
+    return `件数が0の応答が多すぎます（${empty.join("、")}）。API の仕様が変わった可能性があります`;
+  }
   const head = stats.fetchErrors
     .slice(0, 5)
     .map((e) => `${e.jan} ${e.mall}: ${e.message}`)

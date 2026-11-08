@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Mall, Offer } from "@/lib/pricing";
 import { createMemoryBatchRepo } from "./memoryRepo";
 import { createRevalidator } from "./revalidate";
-import { decideStatus, runBatch } from "./run";
+import { decideStatus, emptyMalls, runBatch } from "./run";
 import type { BatchStats, MallFetcher } from "./types";
 
 const JAN = "2000000000015";
@@ -192,5 +192,28 @@ describe("createRevalidator", () => {
   it("失敗したら例外", async () => {
     const fetchImpl = vi.fn(async () => new Response("no", { status: 401 }));
     await expect(createRevalidator("https://x.example", "bad", fetchImpl as unknown as typeof fetch)()).rejects.toThrow("401");
+  });
+});
+
+const emptyStats = (): BatchStats => ({
+  products: 1,
+  fetches: 0,
+  fetchErrors: [],
+  offersSaved: 0,
+  skipped: 0,
+  held: [],
+  historyRows: 0,
+  revalidated: false,
+});
+
+describe("空の応答（API の形が変わった疑い）", () => {
+  it("件数0の応答が9割以上なら、そのモールがあるとき失敗にする", () => {
+    const stats = { ...emptyStats(), fetches: 10, answered: { rakuten: 10 }, emptyAnswers: { rakuten: 9 } };
+    expect(decideStatus(stats)).toBe("failed");
+    expect(emptyMalls(stats)).toEqual(["rakuten"]);
+  });
+  it("応答が5回未満なら、空でも判定しない", () => {
+    const stats = { ...emptyStats(), fetches: 4, answered: { rakuten: 4 }, emptyAnswers: { rakuten: 4 } };
+    expect(decideStatus(stats)).toBe("succeeded");
   });
 });

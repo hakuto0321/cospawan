@@ -76,6 +76,12 @@ export function toProductWithOffers(
   const visible = row.offers_latest.filter((o) => o.hold_reason === null && isOfferFresh(o.fetched_at, now));
   if (visible.length === 0) return null;
   const fetchedAt = visible.map((o) => o.fetched_at).reduce((a, b) => (Date.parse(a) >= Date.parse(b) ? a : b));
+  // モールごとの最後の取得日時（見張り用。保留や古いものも含める）
+  const mallFetchedAt: Partial<Record<Mall, string>> = {};
+  for (const o of row.offers_latest) {
+    const cur = mallFetchedAt[o.mall as Mall];
+    if (!cur || Date.parse(o.fetched_at) > Date.parse(cur)) mallFetchedAt[o.mall as Mall] = o.fetched_at;
+  }
   return {
     product: {
       id: row.id,
@@ -93,6 +99,7 @@ export function toProductWithOffers(
     offers: visible.map(toPricedOffer),
     previousMinEffectivePrice: previousMin,
     fetchedAt,
+    mallFetchedAt,
   };
 }
 
