@@ -296,6 +296,35 @@ h2 {
   min-width: 0;
 }
 
+.deal-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.deal-text {
+  display: grid;
+  flex: 1 1 0;
+  gap: 2px;
+  min-width: 0;
+}
+
+.deal-thumb {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.deal-featured .deal-thumb {
+  width: 88px;
+  height: 88px;
+}
+
 .deal-category {
   font-size: 0.8rem;
 }
@@ -587,6 +616,17 @@ h2 {
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+/* スマホ幅では、価格を名前の下に置く（名前と画像の幅を確保するため） */
+@media (max-width: 480px) {
+  .deal {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .deal-price {
+    justify-items: start;
+    text-align: left;
+  }
 }
 
 /* トップ（見直し案）：見出しは1行、今日いちばんは大きく1つだけ押す、ほかは「もっと見る」 */
