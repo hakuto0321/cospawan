@@ -83,6 +83,14 @@ const items: MockItem[] = [
       ["rakuten", "ねこの手", 1620, 0, "free", 3],
     ],
   },
+  {
+    product: { jan: "2000000000091", name: "【仮】うさぎ用 牧草 チモシー 1kg", petType: "small", categoryName: "フード", size: "1kg", unit: "g", amount: 1000 },
+    previousMin: 1480,
+    shops: [
+      ["rakuten", "ペットの森", 1380, 0, "free", 2],
+      ["yahoo", "ペット日和", 1420, 0, "free", 3],
+    ],
+  },
 ];
 
 function toProductWithOffers(item: MockItem, index: number): ProductWithOffers {
@@ -126,6 +134,8 @@ const events: SaleEvent[] = [
 ];
 
 export function matchesPet(petType: PetType | null, pet: Pet): boolean {
+  // 「both」は犬と猫の両方に出す。小動物は小動物だけ
+  if (pet === "small") return petType === "small";
   return petType === pet || petType === "both";
 }
 

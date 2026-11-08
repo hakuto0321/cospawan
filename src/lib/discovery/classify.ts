@@ -1,7 +1,7 @@
 // 商品の名前から、カテゴリ・ペットの種類・量を読み取る（自動登録の下書き用）
 // 読めないものは null を返し、登録しない。量が読めなければ null のまま（オーナーが直す）
 export type CategorySlug = "pet-food" | "pet-litter" | "pet-sheet";
-export type PetType = "dog" | "cat" | "both";
+export type PetType = "dog" | "cat" | "both" | "small";
 
 export type Classified = {
   categorySlug: CategorySlug;
@@ -25,12 +25,14 @@ const CATEGORY_RULES: { slug: CategorySlug; pattern: RegExp }[] = [
   // ブランド名だけのフード（「ロイヤルカナン 成犬用」など）も拾えるよう、年齢や味の言葉も見る
   {
     slug: "pet-food",
-    pattern: /フード|ごはん|ご飯|おやつ|ジャーキー|缶詰|ちゅ〜る|ちゅーる|成犬|成猫|子犬|子猫|アダルト|パピー|キトン|シニア|チキン|ラム|サーモン|ビーフ|ターキー/,
+    pattern: /フード|ごはん|ご飯|おやつ|ジャーキー|缶詰|ちゅ〜る|ちゅーる|成犬|成猫|子犬|子猫|アダルト|パピー|キトン|シニア|チキン|ラム|サーモン|ビーフ|ターキー|牧草|ペレット/,
   },
 ];
 
 const DOG = /犬|ドッグ|わんちゃん|イヌ/;
 const CAT = /猫|キャット|ねこ|ネコ/;
+// 犬・猫以外の小動物（うさぎ・ハムスター・小鳥など）
+const SMALL = /うさぎ|ウサギ|兎|ハムスター|モルモット|小鳥|インコ|フェレット|チンチラ|デグー|セキセイ|オカメ|文鳥|小動物|ラビット|牧草|チモシー|オーツヘイ/;
 
 // 2kg、100枚、4L、1kg×6袋 など。全角は先に NFKC で半角にしておく
 const SIZE = /(\d+(?:\.\d+)?)\s*(kg|g|l|ml|枚|袋|個|本|缶|箱|包|パック)(?:\s*[×x]\s*(\d+)(?:袋|個|本|缶|箱|包|パック)?)?/i;
@@ -58,6 +60,7 @@ export function classifyName(rawName: string): Classified | null {
   const dog = DOG.test(name);
   const cat = CAT.test(name);
   let petType: PetType | null = dog && cat ? "both" : dog ? "dog" : cat ? "cat" : null;
+  if (!petType && SMALL.test(name)) petType = "small";
   // シーツは犬にも猫にも使うので、動物の名前がなければ両方にする
   if (!petType && rule.slug === "pet-sheet") petType = "both";
   if (!petType) return null;
