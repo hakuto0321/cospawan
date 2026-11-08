@@ -115,7 +115,7 @@ export default async function ProductPage({ params }: Props) {
           </div>
           <p className="sub small">
             実質価格は、価格に送料を足して、もらえるポイントを引いた金額です。ポイントは1ポイント1円で、基本のポイントだけで計算しています。
-            価格は{formatJst(fetchedAt)}に取得したものです。送料がわからないショップ（送料別）は、実質価格を出していません。
+            価格は{formatJst(fetchedAt)}に取得したものです。実際の価格とちがうことがあるので、購入の前にショップのページで確かめてください。送料がわからないショップ（送料別）は、実質価格を出していません。
             {product.amazonUrl && " Amazonの価格は表示していません。"}
           </p>
         </section>
