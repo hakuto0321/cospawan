@@ -125,3 +125,23 @@ export function productJsonLd(item: ProductWithOffers, rows: PricedOffer[], faq:
   };
   return { "@context": "https://schema.org", "@graph": [product, faqPage] };
 }
+
+/** 商品ページに出す値を一度にまとめたもの（ページは、これを並べるだけにする） */
+export function productViewModel(item: ProductWithOffers) {
+  const { product, offers, previousMinEffectivePrice } = item;
+  const best = cheapestOffer(offers);
+  return {
+    best,
+    rows: shopRows(offers),
+    faq: buildFaq(item),
+    lead: leadSentence(item),
+    unitPrice: best ? unitPriceText(best.effectivePrice, product.amount, product.unit) : null,
+    days: daysOfUse(product.amount, product.defaultPerDay),
+    // 前回の最安より安くなったときだけ、その差額を出す
+    drop:
+      best && previousMinEffectivePrice != null && previousMinEffectivePrice > best.effectivePrice
+        ? previousMinEffectivePrice - best.effectivePrice
+        : null,
+    petLabel: product.petType ? `${PET_TYPE_LABEL[product.petType]}・` : "",
+  };
+}
