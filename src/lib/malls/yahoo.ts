@@ -44,6 +44,7 @@ type YahooHit = {
   shipping?: { code?: number; name?: string };
   point?: { lyLimitedBonusAmount?: number; lyLimitedBonusTimes?: number };
   review?: { count?: number };
+  image?: { small?: string; medium?: string };
 };
 
 export function parseYahooResponse(json: unknown, jan: string): MallResult {
@@ -106,7 +107,10 @@ export function parseYahooResponse(json: unknown, jan: string): MallResult {
     .map((h) => h.review!.count as number);
   const reviewCount = reviews.length > 0 ? Math.max(...reviews) : null;
 
-  return { offers, skipped, total: items.length, reviewCount };
+  // 商品画像：同じ JAN の最初の画像（中サイズ）
+  const image = items.find((h) => h.janCode === jan && typeof h.image?.medium === "string")?.image?.medium ?? null;
+
+  return { offers, skipped, total: items.length, reviewCount, imageUrl: image };
 }
 
 export async function fetchYahooOffers(

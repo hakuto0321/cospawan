@@ -10,4 +10,6 @@ export type MallResult = {
   total: number;
   /** 同じ JAN の口コミ数（Yahoo! のみ。取れなければ null） */
   reviewCount?: number | null;
+  /** 商品画像のURL（Yahoo! のみ。取れなければ null） */
+  imageUrl?: string | null;
 };

@@ -59,6 +59,14 @@ export default async function ProductPage({ params }: Props) {
 
       {data.isMock && <p className="mock-notice">開発中：商品名・ショップ・価格はすべて仮のデータです。</p>}
 
+      {product.imageUrl && best && (
+        <a className="product-image" href={offerHref(jan, best)} rel={OUTBOUND_REL} target="_blank">
+          {/* 画像は、ショップのページへのリンクとセットで出す（Yahoo! の規約に合わせる） */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={product.imageUrl} alt={product.name} width={300} height={300} />
+        </a>
+      )}
+
       <header className="stack">
         <p className="sub small breadcrumb">
           <Link href={product.petType === "cat" ? "/cat" : "/"}>今日の買いどき</Link> ›{" "}

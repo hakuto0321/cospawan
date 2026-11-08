@@ -110,6 +110,9 @@ async function updateProduct(
     if (mall === "yahoo" && typeof result.reviewCount === "number") {
       await repo.updateReviewCount(product.id, result.reviewCount);
     }
+    if (mall === "yahoo" && result.imageUrl) {
+      await repo.updateImageUrl(product.id, result.imageUrl);
+    }
     const fetchedAt = now().toISOString();
     stats.skipped += result.skipped.length;
 

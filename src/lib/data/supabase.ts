@@ -11,7 +11,7 @@ const PREVIOUS_FROM_HOURS = 48;
 const PREVIOUS_TO_HOURS = 20;
 
 const PRODUCT_COLUMNS =
-  "id, jan, name, pet_type, size, unit, amount, default_per_day, amazon_url, review_count, categories(name), " +
+  "id, jan, name, pet_type, size, unit, amount, default_per_day, amazon_url, review_count, image_url, categories(name), " +
   "offers_latest(mall, item_code, shop_name, price, shipping, shipping_status, point_rate, points, effective_price, url, fetched_at, hold_reason)";
 
 export type OfferRow = {
@@ -40,6 +40,7 @@ export type ProductRow = {
   default_per_day: number | string | null;
   amazon_url: string | null;
   review_count: number | null;
+  image_url: string | null;
   categories: { name: string } | null;
   offers_latest: OfferRow[];
 };
@@ -95,6 +96,7 @@ export function toProductWithOffers(
       defaultPerDay: num(row.default_per_day),
       amazonUrl: row.amazon_url,
       reviewCount: row.review_count,
+      imageUrl: row.image_url,
     },
     offers: visible.map(toPricedOffer),
     previousMinEffectivePrice: previousMin,

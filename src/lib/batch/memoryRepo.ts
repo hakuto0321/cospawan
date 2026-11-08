@@ -26,6 +26,9 @@ export function createMemoryBatchRepo(products: BatchProduct[], initialOffers: R
     async updateReviewCount() {
       // 仮データの保存先では、口コミ数は覚えない
     },
+    async updateImageUrl() {
+      // 仮データの保存先では、画像は覚えない
+    },
     async appendHistory(row) {
       history.push(row);
     },
