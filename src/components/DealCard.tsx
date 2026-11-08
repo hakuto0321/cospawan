@@ -9,8 +9,17 @@ export function DealCard({ deal, featured = false }: { deal: Deal; featured?: bo
   return (
     <Link href={`/products/${product.jan}`} className={`deal${featured ? " deal-featured" : ""}`}>
       <div className="deal-main">
-        <span className="deal-category sub">{product.categoryName}</span>
-        <span className="deal-name">{product.name}</span>
+        <div className="deal-head">
+          {product.imageUrl && (
+            // 画像は商品名の隣に置く（画像だけで情報を伝えないように、名前は必ず出す）
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="deal-thumb" src={product.imageUrl} alt="" loading="lazy" width={featured ? 88 : 64} height={featured ? 88 : 64} />
+          )}
+          <div className="deal-text">
+            <span className="deal-category sub">{product.categoryName}</span>
+            <span className="deal-name">{product.name}</span>
+          </div>
+        </div>
       </div>
       <div className="deal-price">
         <span className="price deal-yen">{yen(best.effectivePrice)}</span>
