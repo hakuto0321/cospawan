@@ -69,7 +69,7 @@ export default async function ProductPage({ params }: Props) {
 
       <header className="stack">
         <p className="sub small breadcrumb">
-          <Link href={product.petType === "cat" ? "/cat" : "/"}>今日の買いどき</Link> ›{" "}
+          <Link href={product.petType === "cat" ? "/cat" : product.petType === "small" ? "/small" : "/"}>今日の買いどき</Link> ›{" "}
           {petLabel}
           {product.categoryName}
         </p>

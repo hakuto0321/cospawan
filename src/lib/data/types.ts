@@ -1,6 +1,7 @@
 import type { Mall, PricedOffer } from "@/lib/pricing";
 
-export type Pet = "dog" | "cat";
+/** 犬・猫・小動物（犬と猫以外。うさぎ・ハムスター・小鳥など） */
+export type Pet = "dog" | "cat" | "small";
 export type PetType = Pet | "both";
 
 export type Product = {

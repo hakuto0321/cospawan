@@ -57,3 +57,18 @@ describe("cleanName", () => {
     expect(cleanName("【正規品】ドッグフード（選べるプレゼント付き） 2kg 送料無料")).toBe("ドッグフード 2kg");
   });
 });
+
+describe("小動物", () => {
+  it("うさぎ用の牧草は、小動物のフードとして読める", () => {
+    expect(classifyName("うさぎ用 牧草 チモシー 1kg")).toEqual({
+      categorySlug: "pet-food",
+      petType: "small",
+      size: "1kg",
+      amount: 1000,
+      unit: "g",
+    });
+  });
+  it("犬や猫の名前があれば、小動物にはしない", () => {
+    expect(classifyName("猫用 フード 2kg")?.petType).toBe("cat");
+  });
+});

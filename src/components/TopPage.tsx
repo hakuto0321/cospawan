@@ -7,13 +7,13 @@ import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { DealCard } from "./DealCard";
 import { RankList } from "./RankList";
 
-const PET_LABEL: Record<Pet, string> = { dog: "犬", cat: "猫" };
-const PET_HREF: Record<Pet, string> = { dog: "/", cat: "/cat" };
+const PET_LABEL: Record<Pet, string> = { dog: "犬", cat: "猫", small: "小動物" };
+const PET_HREF: Record<Pet, string> = { dog: "/", cat: "/cat", small: "/small" };
 
 function PetToggle({ current }: { current: Pet }) {
   return (
     <nav className="seg" aria-label="ペットの種類">
-      {(["dog", "cat"] as const).map((pet) => (
+      {(["dog", "cat", "small"] as const).map((pet) => (
         <Link key={pet} href={PET_HREF[pet]} aria-current={pet === current ? "page" : undefined}>
           {PET_LABEL[pet]}
         </Link>
