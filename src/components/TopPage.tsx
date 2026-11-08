@@ -5,7 +5,7 @@ import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
 import { DealCard } from "./DealCard";
-import { dogSizeTags } from "@/lib/personal";
+import { ageTags, breedTags, CAT_BREEDS, DOG_BREEDS, dogSizeTags } from "@/lib/personal";
 import { FeaturedDeal } from "./FeaturedDeal";
 import { MyPicks, type PickItem } from "./MyPicks";
 import { RankList } from "./RankList";
@@ -73,6 +73,8 @@ export async function TopPage({ pet }: { pet: Pet }) {
     name: d.product.name,
     price: d.best.effectivePrice,
     sizes: dogSizeTags(d.product.name),
+    breeds: pet === "small" ? [] : breedTags(d.product.name, pet === "dog" ? DOG_BREEDS : CAT_BREEDS),
+    ages: pet === "small" ? [] : ageTags(d.product.name),
   }));
   const drops = dropRanking(items, 5);
   const popular = popularRanking(items, 5);
