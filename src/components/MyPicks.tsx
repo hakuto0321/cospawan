@@ -99,7 +99,7 @@ export function MyPicks({ pet, items }: { pet: Pet; items: PickItem[] }) {
           <div className="seg" role="group" aria-label="年齢">
             {AGE_OPTIONS.map((a) => (
               <button key={a ?? "none"} type="button" aria-pressed={profile.age === a} onClick={() => update({ age: a })}>
-                {a ? AGE_SHORT[a] : "指定しない"}
+                {a ? AGE_SHORT[a] : "指定なし"}
               </button>
             ))}
           </div>
