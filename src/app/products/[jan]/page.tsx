@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { WaitlistForm } from "@/components/WaitlistForm";
+import { WatchButton } from "@/components/WatchButton";
 import { getDataSource } from "@/lib/data";
 import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 import { amazonHref, offerHref, OUTBOUND_REL } from "@/lib/outbound";
@@ -140,6 +141,8 @@ export default async function ProductPage({ params }: Props) {
           </p>
         </section>
       )}
+
+      <WatchButton jan={jan} />
 
       <WaitlistForm jan={jan} />
 
