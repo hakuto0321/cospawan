@@ -29,6 +29,9 @@ export function createMemoryBatchRepo(products: BatchProduct[], initialOffers: R
     async updateImageUrl() {
       // 仮データの保存先では、画像は覚えない
     },
+    async updateTags() {
+      // 仮データの保存先では、タグは覚えない
+    },
     async appendHistory(row) {
       history.push(row);
     },

@@ -7,7 +7,7 @@ export type MallFetcher = {
   fetch(jan: string): Promise<MallResult>;
 };
 
-export type BatchProduct = { id: number; jan: string };
+export type BatchProduct = { id: number; jan: string; name: string; petType: "dog" | "cat" | "both" | "small" | null };
 
 /** offers_latest の1行 */
 export type StoredOffer = PricedOffer & {
@@ -36,6 +36,8 @@ export interface BatchRepository {
   updateReviewCount(productId: number, count: number): Promise<void>;
   /** 商品画像のURLを保存する */
   updateImageUrl(productId: number, url: string): Promise<void>;
+  /** 名前と説明文から決めたタグを保存する */
+  updateTags(productId: number, tags: { breeds: string[]; sizes: string[]; ages: string[] }): Promise<void>;
   appendHistory(row: HistoryRow): Promise<void>;
   startRun(): Promise<number>;
   finishRun(runId: number, status: RunStatus, stats: BatchStats, error?: string): Promise<void>;

@@ -40,10 +40,11 @@ export function staleOfferIds(existing: { id: number; item_code: string }[], nex
 export function createSupabaseBatchRepo(db: SupabaseClient): BatchRepository {
   return {
     async listActiveProducts() {
-      return check(
-        await db.from("products").select("id, jan").eq("status", "active").order("id"),
+      const rows = check(
+        await db.from("products").select("id, jan, name, pet_type").eq("status", "active").order("id"),
         "掲載中の商品の読み込み",
-      ) as { id: number; jan: string }[];
+      ) as { id: number; jan: string; name: string; pet_type: "dog" | "cat" | "both" | "small" | null }[];
+      return rows.map((r) => ({ id: r.id, jan: r.jan, name: r.name, petType: r.pet_type }));
     },
 
     async getLatestOffers(productId) {
@@ -75,6 +76,13 @@ export function createSupabaseBatchRepo(db: SupabaseClient): BatchRepository {
       if (stale.length > 0) {
         check(await db.from("offers_latest").delete().in("id", stale), "古い価格の削除");
       }
+    },
+
+    async updateTags(productId, tags) {
+      check(
+        await db.from("products").update({ breeds: tags.breeds, sizes: tags.sizes, ages: tags.ages }).eq("id", productId),
+        "タグの保存",
+      );
     },
 
     async updateImageUrl(productId, url) {

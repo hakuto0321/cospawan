@@ -18,6 +18,10 @@ export type Product = {
   reviewCount: number | null;
   /** 商品画像のURL。取れていなければ null。表示するときは、ショップのページへのリンクとセットにする */
   imageUrl?: string | null;
+  /** 名前と説明文から自動で決めたタグ（対象の犬種・猫種、大きさ、年齢）。無ければ空 */
+  breeds?: string[];
+  sizes?: ("small" | "medium" | "large")[];
+  ages?: ("young" | "adult" | "senior")[];
 };
 
 export type ProductWithOffers = {
