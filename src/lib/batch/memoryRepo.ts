@@ -23,6 +23,9 @@ export function createMemoryBatchRepo(products: BatchProduct[], initialOffers: R
       const others = (offers.get(productId) ?? []).filter((o) => o.mall !== mall);
       offers.set(productId, [...others, ...next]);
     },
+    async updateReviewCount() {
+      // 仮データの保存先では、口コミ数は覚えない
+    },
     async appendHistory(row) {
       history.push(row);
     },

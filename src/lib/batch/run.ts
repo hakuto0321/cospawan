@@ -103,6 +103,9 @@ async function updateProduct(
   for (const { mall, result } of results) {
     // 取れなかったモールは前回のまま残す（取得日時が古いまま見える）
     if (!result) continue;
+    if (mall === "yahoo" && typeof result.reviewCount === "number") {
+      await repo.updateReviewCount(product.id, result.reviewCount);
+    }
     const fetchedAt = now().toISOString();
     stats.skipped += result.skipped.length;
 

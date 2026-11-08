@@ -1,6 +1,7 @@
 // 画面の表示用に、Supabase から商品と価格を読む（公開用の鍵で読むので、RLS で公開中のものだけが返る）
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Mall, PricedOffer, ShippingStatus } from "@/lib/pricing";
+import { isOfferFresh } from "@/lib/health";
 import { check } from "@/lib/supabase/client";
 import { matchesPet } from "./mock";
 import type { DataSource, PetType, ProductWithOffers, SaleEvent } from "./types";
@@ -66,9 +67,13 @@ export function toPricedOffer(r: OfferRow): PricedOffer {
 /**
  * DB の1行を画面用の形にする。表示できる価格（保留していないもの）が1つもなければ null（載せない）
  */
-export function toProductWithOffers(row: ProductRow, previousMin: number | null): ProductWithOffers | null {
-  // 公開用の鍵では保留中の価格はそもそも返らないが、念のためここでも外す
-  const visible = row.offers_latest.filter((o) => o.hold_reason === null);
+export function toProductWithOffers(
+  row: ProductRow,
+  previousMin: number | null,
+  now: Date = new Date(),
+): ProductWithOffers | null {
+  // 保留中の価格は外す。取得から24時間を過ぎた価格も、古すぎるので出さない（モールの取得が止まったときの守り）
+  const visible = row.offers_latest.filter((o) => o.hold_reason === null && isOfferFresh(o.fetched_at, now));
   if (visible.length === 0) return null;
   const fetchedAt = visible.map((o) => o.fetched_at).reduce((a, b) => (Date.parse(a) >= Date.parse(b) ? a : b));
   return {

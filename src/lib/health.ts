@@ -2,6 +2,16 @@
 /** これより古ければ「止まっている」とみなしてオーナーに知らせる */
 export const STALE_AFTER_HOURS = 12;
 
+/** 1件の価格は、これより古ければ画面に出さない（比べる対象からも外す） */
+export const OFFER_MAX_AGE_HOURS = 24;
+
+/** 取得日時から OFFER_MAX_AGE_HOURS 以内か */
+export function isOfferFresh(fetchedAt: string, now: Date, maxAgeHours = OFFER_MAX_AGE_HOURS): boolean {
+  const t = Date.parse(fetchedAt);
+  if (!Number.isFinite(t)) return false;
+  return now.getTime() - t < maxAgeHours * 3_600_000;
+}
+
 export type Freshness = {
   lastUpdatedAt: string | null;
   ageHours: number | null;

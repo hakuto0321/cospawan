@@ -77,6 +77,16 @@ export function createSupabaseBatchRepo(db: SupabaseClient): BatchRepository {
       }
     },
 
+    async updateReviewCount(productId, count) {
+      check(
+        await db
+          .from("products")
+          .update({ review_count: count, review_updated_at: new Date().toISOString() })
+          .eq("id", productId),
+        "口コミ数の保存",
+      );
+    },
+
     async appendHistory(row) {
       check(
         await db.from("price_history").insert({

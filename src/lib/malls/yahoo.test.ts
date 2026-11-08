@@ -85,3 +85,19 @@ describe("withSeller", () => {
     expect(withSeller("10001", undefined)).toBe("10001");
   });
 });
+
+describe("parseYahooResponse の口コミ数", () => {
+  it("同じ JAN の中で一番多い口コミ数を返す。JAN が違う商品は数えない", () => {
+    const json = {
+      hits: [
+        { name: "A", janCode: "4902000000000", code: "s1", url: "https://e/1", price: 1000, seller: { name: "店", sellerId: "s" }, review: { count: 120 } },
+        { name: "B", janCode: "4902000000000", code: "s2", url: "https://e/2", price: 1100, seller: { name: "店2", sellerId: "t" }, review: { count: 300 } },
+        { name: "C", janCode: "9999999999999", code: "s3", url: "https://e/3", price: 900, seller: { name: "店3", sellerId: "u" }, review: { count: 9999 } },
+      ],
+    };
+    expect(parseYahooResponse(json, "4902000000000").reviewCount).toBe(300);
+  });
+  it("口コミ数がなければ null", () => {
+    expect(parseYahooResponse({ hits: [] }, "4902000000000").reviewCount).toBeNull();
+  });
+});

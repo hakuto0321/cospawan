@@ -36,6 +36,21 @@ const productRow = (offers: OfferRow[]): ProductRow => ({
 });
 
 describe("toProductWithOffers", () => {
+  // 「今」を固定する（古い価格の判定を、いつ実行しても同じにするため）
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-11-08T12:00:00+09:00"));
+
+  it("24時間を過ぎた価格は、比べる対象からも画面からも外す", () => {
+    const old = offerRow({ item_code: "old", fetched_at: "2026-11-07T07:00:00+09:00" });
+    const fresh = offerRow({ item_code: "fresh", fetched_at: "2026-11-08T07:00:00+09:00" });
+    const p = toProductWithOffers(productRow([old, fresh]), null)!;
+    expect(p.offers.map((o) => o.itemCode)).toEqual(["fresh"]);
+  });
+  it("全部が古ければ、商品は載せない", () => {
+    const old = offerRow({ fetched_at: "2026-11-07T07:00:00+09:00" });
+    expect(toProductWithOffers(productRow([old]), null)).toBeNull();
+  });
+
   it("DB の行を画面用の形にする（数値の文字列は数にする）", () => {
     const p = toProductWithOffers(
       productRow([offerRow(), offerRow({ mall: "yahoo", item_code: "c_1", fetched_at: "2026-11-08T07:06:00+09:00" })]),
