@@ -8,4 +8,6 @@ export type MallResult = {
   skipped: Skipped[];
   /** API が返した件数 */
   total: number;
+  /** 同じ JAN の口コミ数（Yahoo! のみ。取れなければ null） */
+  reviewCount?: number | null;
 };

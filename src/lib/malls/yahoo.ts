@@ -43,6 +43,7 @@ type YahooHit = {
   seller?: { sellerId?: string; name?: string };
   shipping?: { code?: number; name?: string };
   point?: { lyLimitedBonusAmount?: number; lyLimitedBonusTimes?: number };
+  review?: { count?: number };
 };
 
 export function parseYahooResponse(json: unknown, jan: string): MallResult {
@@ -99,7 +100,13 @@ export function parseYahooResponse(json: unknown, jan: string): MallResult {
     });
   }
 
-  return { offers, skipped, total: items.length };
+  // 口コミ数：同じ JAN の中で一番多い値（売れた数ではない）
+  const reviews = items
+    .filter((h) => h.janCode === jan && typeof h.review?.count === "number")
+    .map((h) => h.review!.count as number);
+  const reviewCount = reviews.length > 0 ? Math.max(...reviews) : null;
+
+  return { offers, skipped, total: items.length, reviewCount };
 }
 
 export async function fetchYahooOffers(
