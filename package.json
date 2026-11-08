@@ -12,6 +12,7 @@
     "try:fetch": "tsx scripts/try-fetch.ts",
     "batch": "tsx scripts/batch.ts",
     "discover": "tsx scripts/discover.ts",
+    "sns:candidates": "tsx scripts/social-candidates.ts",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
