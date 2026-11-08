@@ -3,11 +3,10 @@ import { getDataSource, type Pet, type SaleEvent } from "@/lib/data";
 import { buildDeals } from "@/lib/deals";
 import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
-import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
+import { pickups } from "@/lib/ranking";
 import { DealCard } from "./DealCard";
 import { FeaturedDeal } from "./FeaturedDeal";
 import { MyPicks, type PickItem } from "./MyPicks";
-import { RankList } from "./RankList";
 
 const PET_LABEL: Record<Pet, string> = { dog: "犬", cat: "猫", small: "小動物" };
 const PET_HREF: Record<Pet, string> = { dog: "/", cat: "/cat", small: "/small" };
@@ -39,7 +38,7 @@ function EventBanner({ event, now }: { event: SaleEvent; now: Date }) {
       </strong>
       <span className="sub">
         {started ? `${formatJst(event.endsAt)}まで。` : `${formatJst(event.startsAt)}から。`}
-        期間中はポイントが上乗せされることがあります。表示している実質価格は基本のポイントで計算しています。
+        期間中はポイントが増えることがあります。
       </span>
     </aside>
   );
@@ -75,9 +74,6 @@ export async function TopPage({ pet }: { pet: Pet }) {
     breeds: d.product.breeds ?? [],
     ages: d.product.ages ?? [],
   }));
-  const drops = dropRanking(items, 5);
-  const popular = popularRanking(items, 5);
-  const restDeals = deals.filter((d) => d.product.id !== top?.product.id && !picks.some((p) => p.deal.product.id === d.product.id));
 
   return (
     <div className="stack-lg">
@@ -112,35 +108,6 @@ export async function TopPage({ pet }: { pet: Pet }) {
             </section>
           )}
 
-          {/* 3. ほかは、開いたときだけ見せる */}
-          {(drops.length > 0 || popular.length > 0 || restDeals.length > 0) && (
-            <details className="more card">
-              <summary>もっと見る</summary>
-              <div className="stack">
-                {drops.length > 0 && (
-                  <section className="stack">
-                    <h3>今日のおトク順</h3>
-                    <RankList deals={drops} mode="drop" />
-                  </section>
-                )}
-                {popular.length > 0 && (
-                  <section className="stack">
-                    <h3>口コミの多い順</h3>
-                    <p className="sub small">Yahoo!ショッピングの口コミ数の多い順です。売れた数ではありません。</p>
-                    <RankList deals={popular} mode="reviews" />
-                  </section>
-                )}
-                {restDeals.length > 0 && (
-                  <section className="stack">
-                    <h3>ほかの商品</h3>
-                    {restDeals.map((d) => (
-                      <DealCard key={d.product.id} deal={d} />
-                    ))}
-                  </section>
-                )}
-              </div>
-            </details>
-          )}
         </>
       ) : (
         <p className="card">いま表示できる{PET_LABEL[pet]}用の商品がありません。少し時間をおいて見てください。</p>
