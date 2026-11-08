@@ -1,5 +1,5 @@
 // 売れ筋の自動登録：探す → 名前で分類 → 楽天・Yahoo!の両方で JAN を確かめる → 下書きで登録
-// 登録は必ず status = 'draft' にする。下書きは公開されないので、オーナーが確かめてから active にする
+// 登録は、両モールで JAN が取れて、量も読めたものだけ active（公開）にする。量が読めないものは draft のまま残す
 import { parseYahooSearch, uniqueByJan, type Candidate } from "./candidates";
 import { cleanName, classifyName, type CategorySlug, type Classified } from "./classify";
 
@@ -21,7 +21,7 @@ export type DraftInsert = {
   unit: string | null;
   amount: number | null;
   review_count: number;
-  status: "draft";
+  status: "draft" | "active";
 };
 
 export type DiscoveryDeps = {
@@ -39,6 +39,8 @@ export type DiscoveryOptions = {
   limit: number;
   /** false のときは確認だけ。DB には書かない */
   write: boolean;
+  /** true（既定）のとき、条件を満たしたものは active にする。false なら全部 draft */
+  activate?: boolean;
 };
 
 export type Accepted = { jan: string; name: string; classified: Classified; reviewCount: number; query: string };
@@ -50,6 +52,8 @@ export type DiscoveryReport = {
   accepted: Accepted[];
   rejected: Rejected[];
   written: number;
+  /** 登録したもののうち、公開（active）にしたもの */
+  activeCount: number;
 };
 
 export async function runDiscovery(opts: DiscoveryOptions, deps: DiscoveryDeps): Promise<DiscoveryReport> {
@@ -112,12 +116,13 @@ export async function runDiscovery(opts: DiscoveryOptions, deps: DiscoveryDeps):
         unit: a.classified.unit,
         amount: a.classified.amount,
         review_count: a.reviewCount,
-        status: "draft",
+        status: (opts.activate ?? true) && a.classified.amount !== null ? "active" : "draft",
       };
     });
     await deps.repo.insertDrafts(rows);
     written = rows.length;
   }
 
-  return { searched: opts.queries.length, found: candidates.length, accepted, rejected, written };
+  const activeCount = accepted.filter((a) => (opts.activate ?? true) && a.classified.amount !== null).length;
+  return { searched: opts.queries.length, found: candidates.length, accepted, rejected, written, activeCount: opts.write ? activeCount : 0 };
 }
