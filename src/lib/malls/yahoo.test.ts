@@ -101,3 +101,16 @@ describe("parseYahooResponse の口コミ数", () => {
     expect(parseYahooResponse({ hits: [] }, "4902000000000").reviewCount).toBeNull();
   });
 });
+
+describe("parseYahooResponse の商品画像", () => {
+  it("同じ JAN の最初の画像（中サイズ）を返す。画像がなければ null", () => {
+    const json = {
+      hits: [
+        { name: "A", janCode: "4902000000000", code: "s1", url: "https://e/1", price: 1000, seller: { name: "店", sellerId: "s" }, image: { small: "https://img/c1", medium: "https://img/g1" } },
+        { name: "B", janCode: "9999999999999", code: "s2", url: "https://e/2", price: 900, seller: { name: "店2", sellerId: "t" }, image: { medium: "https://img/other" } },
+      ],
+    };
+    expect(parseYahooResponse(json, "4902000000000").imageUrl).toBe("https://img/g1");
+    expect(parseYahooResponse({ hits: [] }, "4902000000000").imageUrl).toBeNull();
+  });
+});

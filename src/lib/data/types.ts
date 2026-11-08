@@ -16,6 +16,8 @@ export type Product = {
   amazonUrl: string | null;
   /** Yahoo!ショッピングの口コミ数。取れていなければ null。売れた数ではない */
   reviewCount: number | null;
+  /** 商品画像のURL。取れていなければ null。表示するときは、ショップのページへのリンクとセットにする */
+  imageUrl?: string | null;
 };
 
 export type ProductWithOffers = {
