@@ -31,6 +31,7 @@ export async function GET() {
 
 - [犬用品の今日の買いどき](${SITE_URL}/)
 - [猫用品の今日の買いどき](${SITE_URL}/cat)
+- [小動物用品の今日の買いどき](${SITE_URL}/small)
 
 ## 商品ごとの実質最安
 
