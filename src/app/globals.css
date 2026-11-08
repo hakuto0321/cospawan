@@ -203,6 +203,8 @@ h2 {
 
 .seg {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   background: var(--card);
   border-radius: var(--radius-pill);
   padding: 3px;
