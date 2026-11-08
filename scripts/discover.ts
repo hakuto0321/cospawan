@@ -1,8 +1,9 @@
 // 売れ筋の商品を探して、下書きとして登録する
 //   npm run discover                    確認だけ（DB には書かない。最大20件を表示）
-//   npm run discover -- --write         下書きとして Supabase に登録する（公開されない）
+//   npm run discover -- --write         Supabase に登録する。両モールで確かめられて量も読めたものは公開（active）になる
+//   npm run discover -- --write --draft 全部を下書きで登録する（公開しない）
 //   npm run discover -- --limit 10      今回の上限を変える
-// 登録後の商品は status = draft。オーナーが名前・量・1日の使う量を確かめてから active にする
+// 量が読めなかったものは下書きのまま残る。公開した商品は、管理画面で hidden にすれば止められる
 import { createRateLimiter, getJson } from "@/lib/malls/http";
 import { fetchRakutenOffers, type RakutenConfig } from "@/lib/malls/rakuten";
 import { fetchYahooOffers, YAHOO_MIN_INTERVAL_MS, type YahooConfig } from "@/lib/malls/yahoo";
@@ -19,6 +20,7 @@ try {
 
 const args = process.argv.slice(2);
 const write = args.includes("--write");
+const activate = !args.includes("--draft");
 const limitIdx = args.indexOf("--limit");
 const limit = limitIdx >= 0 ? Number(args[limitIdx + 1]) : 20;
 if (!Number.isInteger(limit) || limit < 1) {
@@ -67,7 +69,7 @@ const deps: DiscoveryDeps = {
 
 async function main() {
   console.log(`${write ? "書き込みあり" : "確認だけ（DBには書きません）"}／上限 ${limit} 件／キーワード ${DISCOVERY_QUERIES.length} 個`);
-  const report = await runDiscovery({ queries: DISCOVERY_QUERIES, limit, write }, deps);
+  const report = await runDiscovery({ queries: DISCOVERY_QUERIES, limit, write, activate }, deps);
 
   console.log(`\n検索 ${report.searched} 回、候補 ${report.found} 件（JAN ごとにまとめた数）`);
   console.log(`\n登録候補（下書き）：${report.accepted.length} 件`);
@@ -77,7 +79,7 @@ async function main() {
   }
   console.log(`\n見送り：${report.rejected.length} 件`);
   for (const r of report.rejected.slice(0, 40)) console.log(`  ${r.jan} | ${r.name} | ${r.reason}`);
-  if (write) console.log(`\n下書きとして登録：${report.written} 件（公開には、オーナーが active にする必要があります）`);
+  if (write) console.log(`\n登録：${report.written} 件（公開 ${report.activeCount} 件、下書き ${report.written - report.activeCount} 件）`);
 }
 
 main().catch((e) => {

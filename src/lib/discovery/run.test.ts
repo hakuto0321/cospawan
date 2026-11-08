@@ -30,7 +30,7 @@ describe("runDiscovery", () => {
     );
     expect(report.accepted.map((a) => a.jan)).toEqual(["4902000000002", "4902000000001"]);
     expect(inserted).toHaveLength(2);
-    expect(inserted[0]).toMatchObject({ jan: "4902000000002", category_id: 12, pet_type: "cat", amount: 6, unit: "L", status: "draft" });
+    expect(inserted[0]).toMatchObject({ jan: "4902000000002", category_id: 12, pet_type: "cat", amount: 6, unit: "L", status: "active" });
     expect(report.written).toBe(2);
   });
 
@@ -86,5 +86,24 @@ describe("runDiscovery", () => {
     );
     expect(report.rejected[0].reason).toBe("価格の確認でエラー：Forbidden");
     expect(report.accepted.map((a) => a.jan)).toEqual(["4902000000002"]);
+  });
+});
+
+describe("公開の判定", () => {
+  it("量が読めないものは draft のまま残す", async () => {
+    const { repo, inserted } = fakeRepo();
+    await runDiscovery(
+      { queries: ["q"], limit: 10, write: true },
+      { search: async () => ({ hits: [hit("4902000000005", "ペットシーツ", 5)] }), verify: allOk, repo },
+    );
+    expect(inserted[0].status).toBe("draft");
+  });
+  it("--draft（activate: false）のときは、量が読めても draft", async () => {
+    const { repo, inserted } = fakeRepo();
+    await runDiscovery(
+      { queries: ["q"], limit: 10, write: true, activate: false },
+      { search: async () => ({ hits: [hit("4902000000006", "猫砂 4L", 5)] }), verify: allOk, repo },
+    );
+    expect(inserted[0].status).toBe("draft");
   });
 });
