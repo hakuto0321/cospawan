@@ -77,6 +77,10 @@ export function createSupabaseBatchRepo(db: SupabaseClient): BatchRepository {
       }
     },
 
+    async updateImageUrl(productId, url) {
+      check(await db.from("products").update({ image_url: url }).eq("id", productId), "画像URLの保存");
+    },
+
     async updateReviewCount(productId, count) {
       check(
         await db

@@ -15,6 +15,8 @@ export type Product = {
   amazonUrl: string | null;
   /** Yahoo!ショッピングの口コミ数。取れていなければ null。売れた数ではない */
   reviewCount: number | null;
+  /** 商品画像のURL。取れていなければ null。表示するときは、ショップのページへのリンクとセットにする */
+  imageUrl?: string | null;
 };
 
 export type ProductWithOffers = {
@@ -25,6 +27,8 @@ export type ProductWithOffers = {
   previousMinEffectivePrice: number | null;
   /** 最新の取得日時（ISO 8601） */
   fetchedAt: string;
+  /** モールごとの最後の取得日時（保留・古いものも含む。見張り用）。仮データでは無いこともある */
+  mallFetchedAt?: Partial<Record<Mall, string>>;
 };
 
 export type SaleEvent = {

@@ -7,6 +7,7 @@ import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 import { amazonHref, offerHref, OUTBOUND_REL } from "@/lib/outbound";
 import { leadSentence, productJsonLd, productViewModel, shippingLabel } from "@/lib/productPage";
 import { SITE_URL } from "@/lib/site";
+import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 
 type Props = { params: Promise<{ jan: string }> };
 
@@ -32,6 +33,18 @@ export default async function ProductPage({ params }: Props) {
   const item = await data.getProduct(jan);
   if (!item) notFound();
 
+  if (pricesPaused()) {
+    return (
+      <article className="stack-lg">
+        <header className="stack">
+          <h1 className="product-title">{item.product.name}</h1>
+        </header>
+        <p className="card">{PAUSED_MESSAGE}</p>
+        <WaitlistForm jan={jan} />
+      </article>
+    );
+  }
+
   const { product, fetchedAt } = item;
   const { best, rows, faq, lead, unitPrice, drop, petLabel } = productViewModel(item);
   const jsonLd = productJsonLd(item, rows, faq, `${SITE_URL}/products/${jan}`);
@@ -45,6 +58,14 @@ export default async function ProductPage({ params }: Props) {
       />
 
       {data.isMock && <p className="mock-notice">開発中：商品名・ショップ・価格はすべて仮のデータです。</p>}
+
+      {product.imageUrl && best && (
+        <a className="product-image" href={offerHref(jan, best)} rel={OUTBOUND_REL} target="_blank">
+          {/* 画像は、ショップのページへのリンクとセットで出す（Yahoo! の規約に合わせる） */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={product.imageUrl} alt={product.name} width={300} height={300} />
+        </a>
+      )}
 
       <header className="stack">
         <p className="sub small breadcrumb">

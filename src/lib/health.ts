@@ -12,6 +12,20 @@ export function isOfferFresh(fetchedAt: string, now: Date, maxAgeHours = OFFER_M
   return now.getTime() - t < maxAgeHours * 3_600_000;
 }
 
+/** モールごとの最終更新（見張り用）。どのモールも一度も取れていなければ stale */
+export function evaluateMallFreshness(
+  rows: { mall?: string; fetchedAt: string }[],
+  now: Date,
+  limitHours = STALE_AFTER_HOURS,
+): Record<string, Freshness> {
+  const byMall = new Map<string, string[]>();
+  for (const r of rows) {
+    if (!r.mall) continue;
+    byMall.set(r.mall, [...(byMall.get(r.mall) ?? []), r.fetchedAt]);
+  }
+  return Object.fromEntries([...byMall].map(([mall, times]) => [mall, evaluateFreshness(times, now, limitHours)]));
+}
+
 export type Freshness = {
   lastUpdatedAt: string | null;
   ageHours: number | null;

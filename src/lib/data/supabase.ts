@@ -11,7 +11,7 @@ const PREVIOUS_FROM_HOURS = 48;
 const PREVIOUS_TO_HOURS = 20;
 
 const PRODUCT_COLUMNS =
-  "id, jan, name, pet_type, size, unit, amount, amazon_url, review_count, categories(name), " +
+  "id, jan, name, pet_type, size, unit, amount, amazon_url, review_count, image_url, categories(name), " +
   "offers_latest(mall, item_code, shop_name, price, shipping, shipping_status, point_rate, points, effective_price, url, fetched_at, hold_reason)";
 
 export type OfferRow = {
@@ -39,6 +39,7 @@ export type ProductRow = {
   amount: number | string | null;
   amazon_url: string | null;
   review_count: number | null;
+  image_url: string | null;
   categories: { name: string } | null;
   offers_latest: OfferRow[];
 };
@@ -75,6 +76,12 @@ export function toProductWithOffers(
   const visible = row.offers_latest.filter((o) => o.hold_reason === null && isOfferFresh(o.fetched_at, now));
   if (visible.length === 0) return null;
   const fetchedAt = visible.map((o) => o.fetched_at).reduce((a, b) => (Date.parse(a) >= Date.parse(b) ? a : b));
+  // モールごとの最後の取得日時（見張り用。保留や古いものも含める）
+  const mallFetchedAt: Partial<Record<Mall, string>> = {};
+  for (const o of row.offers_latest) {
+    const cur = mallFetchedAt[o.mall as Mall];
+    if (!cur || Date.parse(o.fetched_at) > Date.parse(cur)) mallFetchedAt[o.mall as Mall] = o.fetched_at;
+  }
   return {
     product: {
       id: row.id,
@@ -87,10 +94,12 @@ export function toProductWithOffers(
       amount: num(row.amount),
       amazonUrl: row.amazon_url,
       reviewCount: row.review_count,
+      imageUrl: row.image_url,
     },
     offers: visible.map(toPricedOffer),
     previousMinEffectivePrice: previousMin,
     fetchedAt,
+    mallFetchedAt,
   };
 }
 
