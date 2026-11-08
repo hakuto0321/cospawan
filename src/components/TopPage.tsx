@@ -81,7 +81,7 @@ export async function TopPage({ pet }: { pet: Pet }) {
           今が買いどき？
         </h1>
         <p className="sub">
-          楽天市場とYahoo!ショッピングの価格を1日3回チェック。送料とポイントを含めた「実質価格」で比べています。
+          楽天市場とYahoo!ショッピングの価格を、送料とポイントを込みで比べています。
         </p>
       </section>
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: `%s｜${SITE_NAME}`,
   },
   description:
-    "楽天市場とYahoo!ショッピングの価格を1日3回集めて、送料とポイントを含めた実質価格で買いどきをお知らせします。",
+    "楽天市場とYahoo!ショッピングの価格を、送料とポイントを込みで比べて、買いどきをお知らせします。",
 };
 
 export default function RootLayout({
