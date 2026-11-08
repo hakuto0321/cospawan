@@ -12,4 +12,6 @@ export type MallResult = {
   reviewCount?: number | null;
   /** 商品画像のURL（Yahoo! のみ。取れなければ null） */
   imageUrl?: string | null;
+  /** 同じ JAN の説明文（Yahoo! のみ。タグを決めるのに使う） */
+  description?: string | null;
 };

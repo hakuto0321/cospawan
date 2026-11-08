@@ -2,6 +2,7 @@
 // 登録は、両モールで JAN が取れて、量も読めたものだけ active（公開）にする。量が読めないものは draft のまま残す
 import { parseYahooSearch, uniqueByJan, type Candidate } from "./candidates";
 import { cleanName, classifyName, type CategorySlug, type Classified } from "./classify";
+import { inferTags } from "@/lib/tags";
 
 export type VerifyResult = { rakutenOffers: number; yahooOffers: number };
 
@@ -21,6 +22,9 @@ export type DraftInsert = {
   unit: string | null;
   amount: number | null;
   review_count: number;
+  breeds: string[];
+  sizes: string[];
+  ages: string[];
   status: "draft" | "active";
 };
 
@@ -116,6 +120,10 @@ export async function runDiscovery(opts: DiscoveryOptions, deps: DiscoveryDeps):
         unit: a.classified.unit,
         amount: a.classified.amount,
         review_count: a.reviewCount,
+        ...(() => {
+          const t = inferTags({ name: a.name, pet: a.classified.petType });
+          return { breeds: t.breeds, sizes: t.sizes, ages: t.ages };
+        })(),
         status: (opts.activate ?? true) && a.classified.amount !== null ? "active" : "draft",
       };
     });

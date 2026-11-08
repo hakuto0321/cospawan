@@ -40,7 +40,7 @@ const clock = () => {
 
 describe("runBatch", () => {
   it("取得して保存し、モールごとの最安を履歴に足し、作り直しを1回呼ぶ", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     const revalidate = vi.fn(async () => {});
     const { status, stats } = await runBatch({
       repo,
@@ -69,7 +69,7 @@ describe("runBatch", () => {
   });
 
   it("50%以上の変動は保留し、基準の価格は前回のまま引き継ぐ。戻れば公開する", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     const rakuten = fetcherSeq("rakuten", [
       [offer("rakuten", "a", 2000)],
       [offer("rakuten", "a", 900)], // 急に安い → 保留
@@ -99,7 +99,7 @@ describe("runBatch", () => {
   });
 
   it("保留した回は、そのモールの履歴に保留中の価格を入れない", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     const rakuten = fetcherSeq("rakuten", [[offer("rakuten", "a", 2000)], [offer("rakuten", "a", 500)]]);
     const now = clock();
     await runBatch({ repo, fetchers: [rakuten], now });
@@ -108,7 +108,7 @@ describe("runBatch", () => {
   });
 
   it("取れなかったモールは前回の価格を残す。失敗が2割以上なら failed", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     const now = clock();
     await runBatch({
       repo,
@@ -134,7 +134,7 @@ describe("runBatch", () => {
   });
 
   it("作り直しに失敗しても、価格の保存は成功として扱う", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     const { status, stats } = await runBatch({
       repo,
       fetchers: [fetcherSeq("rakuten", [[offer("rakuten", "a", 2000)]])],
@@ -147,7 +147,7 @@ describe("runBatch", () => {
   });
 
   it("途中で止まったら failed を記録して例外を投げる", async () => {
-    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN }]);
+    const repo = createMemoryBatchRepo([{ id: 1, jan: JAN, name: "テスト商品", petType: "dog" }]);
     repo.replaceOffers = async () => {
       throw new Error("DB down");
     };

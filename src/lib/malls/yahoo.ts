@@ -45,6 +45,7 @@ type YahooHit = {
   point?: { lyLimitedBonusAmount?: number; lyLimitedBonusTimes?: number };
   review?: { count?: number };
   image?: { small?: string; medium?: string };
+  description?: string;
 };
 
 export function parseYahooResponse(json: unknown, jan: string): MallResult {
@@ -110,7 +111,9 @@ export function parseYahooResponse(json: unknown, jan: string): MallResult {
   // 商品画像：同じ JAN の最初の画像（中サイズ）
   const image = items.find((h) => h.janCode === jan && typeof h.image?.medium === "string")?.image?.medium ?? null;
 
-  return { offers, skipped, total: items.length, reviewCount, imageUrl: image };
+  const description = items.find((h) => h.janCode === jan && typeof h.description === "string")?.description ?? null;
+
+  return { offers, skipped, total: items.length, reviewCount, imageUrl: image, description };
 }
 
 export async function fetchYahooOffers(

@@ -1,5 +1,6 @@
 // 開発用の仮データ。商品名・ショップ名・価格はすべて架空
 import { basePoints, priceOffer, type Mall, type Offer, type ShippingStatus } from "@/lib/pricing";
+import { inferTags } from "@/lib/tags";
 import type { DataSource, Pet, PetType, Product, ProductWithOffers, SaleEvent } from "./types";
 
 const FETCHED_AT = "2026-11-07T07:05:00+09:00";
@@ -114,6 +115,8 @@ function toProductWithOffers(item: MockItem, index: number): ProductWithOffers {
       id: index + 1,
       amazonUrl: "https://www.amazon.co.jp/",
       reviewCount: MOCK_REVIEW_COUNTS[index] ?? null,
+      // 仮データは、名前だけから決める（本物は、説明文も使ってバッチで決める）
+      ...inferTags({ name: item.product.name, pet: item.product.petType ?? "small" }),
     },
     offers,
     previousMinEffectivePrice: item.previousMin,

@@ -51,7 +51,7 @@ async function fakeRun() {
     }));
   }
   const repo = createMemoryBatchRepo(
-    items.map((i) => ({ id: i.product.id, jan: i.product.jan })),
+    items.map((i) => ({ id: i.product.id, jan: i.product.jan, name: i.product.name, petType: i.product.petType })),
     initial,
   );
   return runBatch({ repo, fetchers: createFakeFetchers(parseChanges()), log });

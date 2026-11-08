@@ -4,6 +4,7 @@
 // 3. 実質価格を計算して最新価格を入れ替え、モールごとの最安と上位を履歴に足す
 // 4. ページを作り直す（再検証）
 // 5. 実行の記録を残す。失敗が多いときは failed にする（呼び出し側が終了コードで知らせる）
+import { inferTags } from "@/lib/tags";
 import { priceOffer, rankOffers, summarizeMall, type Mall } from "@/lib/pricing";
 import type {
   BatchProduct,
@@ -101,6 +102,13 @@ async function updateProduct(
       }
     }),
   );
+
+  // 犬種・大きさ・年齢は、名前と（取れていれば）Yahoo! の説明文から決める
+  if (product.petType) {
+    const yahooResult = results.find((r) => r.mall === "yahoo")?.result ?? null;
+    const tags = inferTags({ name: product.name, description: yahooResult?.description ?? null, pet: product.petType });
+    await repo.updateTags(product.id, { breeds: tags.breeds, sizes: tags.sizes, ages: tags.ages });
+  }
 
   for (const { mall, result } of results) {
     // 取れなかったモールは前回のまま残す（取得日時が古いまま見える）
