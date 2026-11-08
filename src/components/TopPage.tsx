@@ -5,7 +5,9 @@ import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
 import { DealCard } from "./DealCard";
+import { dogSizeTags } from "@/lib/personal";
 import { FeaturedDeal } from "./FeaturedDeal";
+import { MyPicks, type PickItem } from "./MyPicks";
 import { RankList } from "./RankList";
 
 const PET_LABEL: Record<Pet, string> = { dog: "犬", cat: "猫", small: "小動物" };
@@ -65,6 +67,13 @@ export async function TopPage({ pet }: { pet: Pet }) {
   const updatedAt = items.map((i) => i.fetchedAt).sort().at(-1);
   const event = events[0];
   const picks = pickups(items, top?.product.id ?? null, 3);
+  // この端末の「気になる」「犬のサイズ」に使う（サーバーには送らない）
+  const pickItems: PickItem[] = deals.map((d) => ({
+    jan: d.product.jan,
+    name: d.product.name,
+    price: d.best.effectivePrice,
+    sizes: dogSizeTags(d.product.name),
+  }));
   const drops = dropRanking(items, 5);
   const popular = popularRanking(items, 5);
   const restDeals = deals.filter((d) => d.product.id !== top?.product.id && !picks.some((p) => p.deal.product.id === d.product.id));
@@ -88,6 +97,8 @@ export async function TopPage({ pet }: { pet: Pet }) {
             <p className="sub small">今日いちばんの買いどき</p>
             <FeaturedDeal deal={top} />
           </section>
+
+          <MyPicks pet={pet} items={pickItems} />
 
           {event && <EventBanner event={event} now={now} />}
 
