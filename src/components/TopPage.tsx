@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDataSource, type Pet, type SaleEvent } from "@/lib/data";
 import { buildDeals } from "@/lib/deals";
 import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
+import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { DealCard } from "./DealCard";
 import { RankList } from "./RankList";
@@ -43,6 +44,23 @@ function EventBanner({ event, now }: { event: SaleEvent; now: Date }) {
 }
 
 export async function TopPage({ pet }: { pet: Pet }) {
+  if (pricesPaused()) {
+    return (
+      <div className="stack-lg">
+        <section className="hero">
+          <h1>
+            いつものペット用品、
+            <br />
+            今が買いどき？
+          </h1>
+        </section>
+        <div className="row-between">
+          <PetToggle current={pet} />
+        </div>
+        <p className="card">{PAUSED_MESSAGE}</p>
+      </div>
+    );
+  }
   const data = getDataSource();
   const now = new Date();
   const [items, events] = await Promise.all([data.getProductsForPet(pet), data.getUpcomingEvents(now)]);

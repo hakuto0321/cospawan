@@ -52,4 +52,8 @@ export type BatchStats = {
   held: HeldItem[];
   historyRows: number;
   revalidated: boolean;
+  /** モールごとに、応答を受け取れた回数（取得の失敗を除く） */
+  answered?: Partial<Record<Mall, number>>;
+  /** そのうち、件数が0だった回数（API の形が変わったときに増える） */
+  emptyAnswers?: Partial<Record<Mall, number>>;
 };

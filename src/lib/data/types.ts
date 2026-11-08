@@ -26,6 +26,8 @@ export type ProductWithOffers = {
   previousMinEffectivePrice: number | null;
   /** 最新の取得日時（ISO 8601） */
   fetchedAt: string;
+  /** モールごとの最後の取得日時（保留・古いものも含む。見張り用）。仮データでは無いこともある */
+  mallFetchedAt?: Partial<Record<Mall, string>>;
 };
 
 export type SaleEvent = {
