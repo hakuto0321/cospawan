@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { getDataSource, type Pet, type SaleEvent } from "@/lib/data";
 import { buildDeals } from "@/lib/deals";
+import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
 import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { DealCard } from "./DealCard";
+import { RankList } from "./RankList";
 
 const PET_LABEL: Record<Pet, string> = { dog: "犬", cat: "猫" };
 const PET_HREF: Record<Pet, string> = { dog: "/", cat: "/cat" };
@@ -48,6 +50,9 @@ export async function TopPage({ pet }: { pet: Pet }) {
   const [top, ...rest] = deals;
   const updatedAt = items.map((i) => i.fetchedAt).sort().at(-1);
   const event = events[0];
+  const picks = pickups(items, top?.product.id ?? null, 3);
+  const drops = dropRanking(items, 5);
+  const popular = popularRanking(items, 5);
 
   return (
     <div className="stack-lg">
@@ -77,6 +82,34 @@ export async function TopPage({ pet }: { pet: Pet }) {
           </section>
 
           {event && <EventBanner event={event} now={now} />}
+
+          {picks.length > 0 && (
+            <section className="stack">
+              <h2>ピックアップ</h2>
+              <p className="sub small">値下がり中で、口コミの多いものを自動で選んでいます。</p>
+              {picks.map((p) => (
+                <DealCard key={p.deal.product.id} deal={p.deal} />
+              ))}
+            </section>
+          )}
+
+          {drops.length > 0 && (
+            <section className="stack">
+              <h2>今日のおトク順</h2>
+              <p className="sub small">前日の実質最安より、下がった割合の大きい順です。</p>
+              <RankList deals={drops} mode="drop" />
+            </section>
+          )}
+
+          {popular.length > 0 && (
+            <section className="stack">
+              <h2>口コミの多い順</h2>
+              <p className="sub small">
+                Yahoo!ショッピングの口コミ数の多い順です。売れた数ではありません。
+              </p>
+              <RankList deals={popular} mode="reviews" />
+            </section>
+          )}
 
           {rest.length > 0 && (
             <section className="stack">

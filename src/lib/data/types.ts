@@ -14,6 +14,8 @@ export type Product = {
   amount: number | null;
   defaultPerDay: number | null;
   amazonUrl: string | null;
+  /** Yahoo!ショッピングの口コミ数。取れていなければ null。売れた数ではない */
+  reviewCount: number | null;
 };
 
 export type ProductWithOffers = {

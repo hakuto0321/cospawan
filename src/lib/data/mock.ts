@@ -7,10 +7,13 @@ const FETCHED_AT = "2026-11-07T07:05:00+09:00";
 type ShopRow = [mall: Mall, shopName: string, price: number, shipping: number | null, status: ShippingStatus, pointRate: number];
 
 type MockItem = {
-  product: Omit<Product, "id" | "amazonUrl">;
+  product: Omit<Product, "id" | "amazonUrl" | "reviewCount">;
   previousMin: number | null;
   shops: ShopRow[];
 };
+
+// 開発用の口コミ数（商品の並び順に対応）
+const MOCK_REVIEW_COUNTS = [1240, 880, 410, 230, 760, 95, 540, 120];
 
 const items: MockItem[] = [
   {
@@ -98,7 +101,12 @@ function toProductWithOffers(item: MockItem, index: number): ProductWithOffers {
     return priceOffer(offer);
   });
   return {
-    product: { ...item.product, id: index + 1, amazonUrl: "https://www.amazon.co.jp/" },
+    product: {
+      ...item.product,
+      id: index + 1,
+      amazonUrl: "https://www.amazon.co.jp/",
+      reviewCount: MOCK_REVIEW_COUNTS[index] ?? null,
+    },
     offers,
     previousMinEffectivePrice: item.previousMin,
     fetchedAt: FETCHED_AT,

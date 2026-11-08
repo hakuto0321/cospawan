@@ -224,6 +224,41 @@ h2 {
   border: 2px solid transparent;
 }
 
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.rank-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 12px 16px;
+}
+.rank-no {
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--accent);
+  min-width: 1.4em;
+  text-align: center;
+}
+.rank-name {
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  min-width: 0;
+}
+.rank-side {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+.rank-yen {
+  font-weight: 700;
+}
 .deal:hover,
 .deal:focus-visible {
   border-color: var(--accent);
