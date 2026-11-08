@@ -34,7 +34,7 @@ function EventBanner({ event, now }: { event: SaleEvent; now: Date }) {
       </strong>
       <span className="sub">
         {started ? `${formatJst(event.endsAt)}まで。` : `${formatJst(event.startsAt)}から。`}
-        期間中はポイントが上乗せされることがあります。表示している実質価格は基本のポイントで計算しています。
+        期間中はポイントがさらにつくことがあります。ここに出している実質価格は、基本のポイントだけで計算しています。
       </span>
     </aside>
   );
@@ -92,7 +92,7 @@ export async function TopPage({ pet }: { pet: Pet }) {
       )}
 
       <p className="sub small">
-        実質価格 ＝ 価格 ＋ 送料 − もらえるポイント（1ポイント1円、基本のポイントで計算）。送料がわからないショップは比較に入れていません。
+        実質価格は、価格に送料を足して、もらえるポイントを引いた金額です。ポイントは1ポイント1円で、基本のポイントだけで計算しています。送料がわからないショップは、比べる対象から外しています。
       </p>
     </div>
   );

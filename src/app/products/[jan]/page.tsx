@@ -114,9 +114,9 @@ export default async function ProductPage({ params }: Props) {
             </table>
           </div>
           <p className="sub small">
-            実質 ＝ 価格 ＋ 送料 − もらえるポイント（1ポイント1円、基本のポイントで計算）。{formatJst(fetchedAt)}
-            に取得。「送料別」のショップは送料がわからないため、実質価格を出していません。
-            {product.amazonUrl && "Amazonの価格は表示していません。"}
+            実質価格は、価格に送料を足して、もらえるポイントを引いた金額です。ポイントは1ポイント1円で、基本のポイントだけで計算しています。
+            価格は{formatJst(fetchedAt)}に取得したものです。送料がわからないショップ（送料別）は、実質価格を出していません。
+            {product.amazonUrl && " Amazonの価格は表示していません。"}
           </p>
         </section>
       )}
