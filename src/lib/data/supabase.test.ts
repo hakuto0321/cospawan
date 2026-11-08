@@ -29,7 +29,6 @@ const productRow = (offers: OfferRow[]): ProductRow => ({
   size: "2kg",
   unit: "g",
   amount: "2000",
-  default_per_day: "100",
   amazon_url: null,
   categories: { name: "フード" },
   offers_latest: offers,
@@ -56,7 +55,7 @@ describe("toProductWithOffers", () => {
       productRow([offerRow(), offerRow({ mall: "yahoo", item_code: "c_1", fetched_at: "2026-11-08T07:06:00+09:00" })]),
       2100,
     )!;
-    expect(p.product).toMatchObject({ id: 7, categoryName: "フード", amount: 2000, defaultPerDay: 100 });
+    expect(p.product).toMatchObject({ id: 7, categoryName: "フード", amount: 2000 });
     expect(p.offers[0]).toMatchObject({ itemCode: "shop:1", pointRate: 1, effectivePrice: 1982, holdReason: null });
     expect(p.previousMinEffectivePrice).toBe(2100);
     expect(p.fetchedAt).toBe("2026-11-08T07:06:00+09:00"); // いちばん新しい取得日時

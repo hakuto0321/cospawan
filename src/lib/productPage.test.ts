@@ -3,7 +3,6 @@ import { priceOffer, type Mall, type ShippingStatus } from "./pricing";
 import type { ProductWithOffers } from "./data/types";
 import {
   buildFaq,
-  daysOfUse,
   leadSentence,
   productJsonLd,
   productViewModel,
@@ -24,7 +23,6 @@ const item = (rows: Row[]): ProductWithOffers => ({
     size: "3kg",
     unit: "g",
     amount: 3000,
-    defaultPerDay: 90,
     amazonUrl: null,
     reviewCount: null,
   },
@@ -80,16 +78,12 @@ describe("leadSentence", () => {
   });
 });
 
-describe("unitPriceText / daysOfUse", () => {
+describe("unitPriceText", () => {
   it("g は 1kg あたり、それ以外は 1単位あたり", () => {
     expect(unitPriceText(4100, 3000, "g")).toBe("1kgあたり約1,367円");
     expect(unitPriceText(1518, 100, "枚")).toBe("1枚あたり約15.2円");
     expect(unitPriceText(3380, 6, "袋")).toBe("1袋あたり約563円");
     expect(unitPriceText(1000, null, "g")).toBeNull();
-  });
-  it("何日分か", () => {
-    expect(daysOfUse(3000, 90)).toBe(33);
-    expect(daysOfUse(3000, null)).toBeNull();
   });
 });
 
@@ -99,7 +93,6 @@ describe("buildFaq", () => {
     expect(faq.map((f) => f.q)).toEqual([
       "楽天市場とYahoo!ショッピング、どちらが安い？",
       "1kgあたりいくら？",
-      "1つで何日くらいもつ？",
       "価格はいつ更新される？",
     ]);
     expect(faq[0].a).toContain("Yahoo!ショッピングのほうが安く、実質4,100円です（楽天市場は4,300円）");
@@ -131,7 +124,6 @@ describe("productViewModel", () => {
     const v = productViewModel(base);
     expect(v.drop).toBe(100);
     expect(v.petLabel).toBe("犬・");
-    expect(v.days).toBe(Math.floor(base.product.amount! / base.product.defaultPerDay!));
 
     const noDrop = productViewModel({ ...base, previousMinEffectivePrice: 1500 });
     expect(noDrop.drop).toBeNull();

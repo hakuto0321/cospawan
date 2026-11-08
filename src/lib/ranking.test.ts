@@ -14,7 +14,6 @@ const item = (id: number, price: number, prev: number | null, reviewCount: numbe
     size: null,
     unit: null,
     amount: null,
-    defaultPerDay: null,
     amazonUrl: null,
     reviewCount,
   },
