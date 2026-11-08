@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Zen_Maru_Gothic } from "next/font/google";
+import { LogoMark } from "@/components/LogoMark";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
         <header className="site-header">
           <div className="container">
             <Link href="/" className="site-logo">
+              <LogoMark />
               {SITE_NAME}
             </Link>
             <span className="ad-notice">広告を含みます</span>

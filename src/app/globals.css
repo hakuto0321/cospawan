@@ -107,10 +107,19 @@ a {
 }
 
 .site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-weight: 900;
   font-size: 1.4rem;
   color: var(--accent);
   text-decoration: none;
+}
+
+.logo-mark {
+  width: 1.9rem;
+  height: 1.9rem;
+  flex-shrink: 0;
 }
 
 .ad-notice {
