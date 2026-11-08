@@ -8,7 +8,6 @@ import {
   productViewModel,
   shippingLabel,
   shopRows,
-  unitPriceText,
 } from "./productPage";
 
 type Row = [mall: Mall, shop: string, price: number, status?: ShippingStatus, shipping?: number | null, prev?: number];
@@ -78,27 +77,17 @@ describe("leadSentence", () => {
   });
 });
 
-describe("unitPriceText", () => {
-  it("g は 1kg あたり、それ以外は 1単位あたり", () => {
-    expect(unitPriceText(4100, 3000, "g")).toBe("1kgあたり約1,367円");
-    expect(unitPriceText(1518, 100, "枚")).toBe("1枚あたり約15.2円");
-    expect(unitPriceText(3380, 6, "袋")).toBe("1袋あたり約563円");
-    expect(unitPriceText(1000, null, "g")).toBeNull();
-  });
-});
-
 describe("buildFaq", () => {
-  it("モール比較・単価・日数・更新時刻を答える", () => {
+  it("モール比較と更新時刻を答える", () => {
     const faq = buildFaq(sample);
     expect(faq.map((f) => f.q)).toEqual([
       "楽天市場とYahoo!ショッピング、どちらが安い？",
-      "1kgあたりいくら？",
       "価格はいつ更新される？",
     ]);
     expect(faq[0].a).toContain("Yahoo!ショッピングのほうが安く、実質4,100円です（楽天市場は4,300円）");
   });
   it("片方のモールしかなければ比較の質問は出さない", () => {
-    expect(buildFaq(item([["rakuten", "A", 4300]]))[0].q).toBe("1kgあたりいくら？");
+    expect(buildFaq(item([["rakuten", "A", 4300]]))[0].q).toBe("価格はいつ更新される？");
   });
 });
 
@@ -119,7 +108,7 @@ describe("productJsonLd", () => {
 });
 
 describe("productViewModel", () => {
-  it("前回より安くなったときだけ差額を出し、個数から日数と1kgあたりを作る", () => {
+  it("前回より安くなったときだけ差額を出す", () => {
     const base = { ...item([["rakuten", "A", 2000]]), previousMinEffectivePrice: 2100 };
     const v = productViewModel(base);
     expect(v.drop).toBe(100);
@@ -133,6 +122,5 @@ describe("productViewModel", () => {
     const v = productViewModel(item([["rakuten", "A", 2000, "paid", null]]));
     expect(v.best).toBeNull();
     expect(v.drop).toBeNull();
-    expect(v.unitPrice).toBeNull();
   });
 });

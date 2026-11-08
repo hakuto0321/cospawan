@@ -34,15 +34,6 @@ export function leadSentence(item: ProductWithOffers): string | null {
   return `実質最安は${yen(best.effectivePrice)}（${MALL_LABEL[best.mall]}・${best.shopName}、${formatJst(item.fetchedAt)}時点）。`;
 }
 
-/** 1kg あたり・1枚あたりなど。計算できなければ null */
-export function unitPriceText(effectivePrice: number, amount: number | null, unit: string | null): string | null {
-  if (!amount || !unit) return null;
-  if (unit === "g") return `1kgあたり約${yen(effectivePrice / (amount / 1000))}`;
-  const per = effectivePrice / amount;
-  const perText = per < 100 ? `${(Math.round(per * 10) / 10).toLocaleString("ja-JP")}円` : yen(per);
-  return `1${unit}あたり約${perText}`;
-}
-
 /** モールごとの実質最安 */
 export function mallMins(offers: PricedOffer[]): Record<Mall, number | null> {
   const min = (mall: Mall) => rankOffers(offers.filter((o) => o.mall === mall))[0]?.effectivePrice ?? null;
@@ -52,10 +43,9 @@ export function mallMins(offers: PricedOffer[]): Record<Mall, number | null> {
 export type Faq = { q: string; a: string };
 
 export function buildFaq(item: ProductWithOffers): Faq[] {
-  const { product, offers } = item;
+  const { offers } = item;
   const faq: Faq[] = [];
   const mins = mallMins(offers);
-  const best = cheapestOffer(offers);
 
   if (mins.rakuten !== null && mins.yahoo !== null) {
     const a =
@@ -65,14 +55,6 @@ export function buildFaq(item: ProductWithOffers): Faq[] {
           ? `今は楽天市場のほうが安く、実質${yen(mins.rakuten)}です（Yahoo!ショッピングは${yen(mins.yahoo)}）。`
           : `今はYahoo!ショッピングのほうが安く、実質${yen(mins.yahoo)}です（楽天市場は${yen(mins.rakuten)}）。`;
     faq.push({ q: "楽天市場とYahoo!ショッピング、どちらが安い？", a: `${a}${formatJst(item.fetchedAt)}時点の価格です。` });
-  }
-
-  if (best) {
-    const unit = unitPriceText(best.effectivePrice, product.amount, product.unit);
-    if (unit) {
-      const q = product.unit === "g" ? "1kgあたりいくら？" : `1${product.unit}あたりいくら？`;
-      faq.push({ q, a: `実質最安で買うと、${unit}です。` });
-    }
   }
 
   faq.push({
@@ -121,7 +103,6 @@ export function productViewModel(item: ProductWithOffers) {
     rows: shopRows(offers),
     faq: buildFaq(item),
     lead: leadSentence(item),
-    unitPrice: best ? unitPriceText(best.effectivePrice, product.amount, product.unit) : null,
     // 前回の最安より安くなったときだけ、その差額を出す
     drop:
       best && previousMinEffectivePrice != null && previousMinEffectivePrice > best.effectivePrice
