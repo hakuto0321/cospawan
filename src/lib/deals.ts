@@ -13,6 +13,8 @@ export type Deal = {
   /** もう一方のモールの実質最安。そのモールに比較できる価格がなければ null */
   otherMall: { mall: Mall; effectivePrice: number } | null;
   fetchedAt: string;
+  /** 口コミ数（人気順の目安）。取れていなければ null */
+  reviewCount: number | null;
 };
 
 export function toDeal(item: ProductWithOffers): Deal | null {
@@ -25,7 +27,14 @@ export function toDeal(item: ProductWithOffers): Deal | null {
   const other = rankOffers(item.offers).find((o) => o.mall !== best.mall);
   const otherMall = other ? { mall: other.mall, effectivePrice: other.effectivePrice } : null;
 
-  return { product: item.product, best, drop, otherMall, fetchedAt: item.fetchedAt };
+  return {
+    product: item.product,
+    best,
+    drop,
+    otherMall,
+    fetchedAt: item.fetchedAt,
+    reviewCount: item.product.reviewCount,
+  };
 }
 
 function dropRatio(d: Deal): number {

@@ -20,6 +20,7 @@ export type DraftInsert = {
   size: string | null;
   unit: string | null;
   amount: number | null;
+  review_count: number;
   status: "draft" | "active";
 };
 
@@ -114,6 +115,7 @@ export async function runDiscovery(opts: DiscoveryOptions, deps: DiscoveryDeps):
         size: a.classified.size,
         unit: a.classified.unit,
         amount: a.classified.amount,
+        review_count: a.reviewCount,
         status: (opts.activate ?? true) && a.classified.amount !== null ? "active" : "draft",
       };
     });

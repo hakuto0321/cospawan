@@ -25,6 +25,7 @@ const productRow = (offers: OfferRow[]): ProductRow => ({
   jan: "2000000000015",
   name: "【仮】ドッグフード",
   pet_type: "dog",
+  review_count: 120,
   size: "2kg",
   unit: "g",
   amount: "2000",

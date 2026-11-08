@@ -26,6 +26,7 @@ const item = (rows: Row[]): ProductWithOffers => ({
     amount: 3000,
     defaultPerDay: 90,
     amazonUrl: null,
+    reviewCount: null,
   },
   offers: rows.map(([mall, shopName, price, status = "free", shipping = 0, prev], i) =>
     priceOffer(

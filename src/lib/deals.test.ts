@@ -19,6 +19,7 @@ const item = (
     amount: null,
     defaultPerDay: null,
     amazonUrl: null,
+    reviewCount: null,
   },
   offers: offers.map(([mall, price, status = "free"], i) =>
     priceOffer({
