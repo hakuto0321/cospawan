@@ -79,11 +79,11 @@ export function MyPicks({ pet, items }: { pet: Pet; items: PickItem[] }) {
   return (
     <div className="stack">
       <details className="card more">
-        <summary>うちの子の条件で探す（任意）</summary>
+        <summary>うちの子の条件で探す</summary>
         <div className="stack">
       <section className="stack">
         <h2>うちの子の条件</h2>
-        <p className="sub small">任意です。この端末だけに保存します。名前から判定した目安で、合うものを前に出します。</p>
+        <p className="sub small">この端末だけに保存します。名前から判定した目安で、合うものを前に出します。</p>
 
         <label className="field">
           <span className="sub small">{petName}種</span>
