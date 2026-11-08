@@ -3,7 +3,7 @@ import { cheapestOffer, rankOffers, type Mall, type PricedOffer } from "@/lib/pr
 import type { PetType, ProductWithOffers } from "@/lib/data/types";
 import { formatJst, MALL_LABEL, yen } from "@/lib/format";
 
-export const PET_TYPE_LABEL: Record<PetType, string> = { dog: "犬", cat: "猫", both: "犬・猫" };
+export const PET_TYPE_LABEL: Record<PetType, string> = { dog: "犬", cat: "猫", both: "犬・猫", small: "小動物" };
 
 /** 表に出すショップ。保留中は出さない。比較できるものを実質の安い順、その後ろに送料別を価格の安い順 */
 export function shopRows(offers: PricedOffer[]): PricedOffer[] {
