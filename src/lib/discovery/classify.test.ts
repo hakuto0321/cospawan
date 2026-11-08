@@ -68,6 +68,9 @@ describe("小動物", () => {
       unit: "g",
     });
   });
+  it("牧草やチモシーだけの名前も、小動物として読める", () => {
+    expect(classifyName("牧草市場 スーパープレミアム チモシー 1番刈り 牧草 3kg")).toMatchObject({ categorySlug: "pet-food", petType: "small", amount: 3000 });
+  });
   it("犬や猫の名前があれば、小動物にはしない", () => {
     expect(classifyName("猫用 フード 2kg")?.petType).toBe("cat");
   });
