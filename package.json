@@ -11,6 +11,7 @@
     "db:push": "node scripts/db-push.mjs",
     "try:fetch": "tsx scripts/try-fetch.ts",
     "batch": "tsx scripts/batch.ts",
+    "discover": "tsx scripts/discover.ts",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
