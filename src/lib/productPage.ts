@@ -77,7 +77,7 @@ export function buildFaq(item: ProductWithOffers): Faq[] {
 
   faq.push({
     q: "価格はいつ更新される？",
-    a: "楽天市場とYahoo!ショッピングの価格を、毎日7時・12時・20時ごろの1日3回取り直しています。",
+    a: "楽天市場とYahoo!ショッピングの価格を、定期的に取り直しています。ページの「取得した日時」を見てください。",
   });
 
   return faq;
