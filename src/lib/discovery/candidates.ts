@@ -16,6 +16,10 @@ export const DISCOVERY_QUERIES = [
   "ペットシーツ",
   "犬 おやつ",
   "猫 おやつ",
+  "うさぎ フード",
+  "うさぎ 牧草",
+  "ハムスター フード",
+  "小鳥 フード",
 ];
 
 export type Candidate = {
