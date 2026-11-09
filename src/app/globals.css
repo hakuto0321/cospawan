@@ -648,6 +648,18 @@ h2 {
   }
 }
 
+/* カテゴリで絞る */
+.category-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.category-form .field {
+  flex: 1 1 180px;
+}
+
 /* この端末だけの「気になる」「犬のサイズ」 */
 .watch-on {
   background: var(--deal-bg);

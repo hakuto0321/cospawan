@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/cat" },
 };
 
-export default function CatHome() {
-  return <TopPage pet="cat" />;
+export default async function CatHome({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const { category } = await searchParams;
+  return <TopPage pet="cat" category={category} />;
 }

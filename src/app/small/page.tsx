@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/small" },
 };
 
-export default function SmallHome() {
-  return <TopPage pet="small" />;
+export default async function SmallHome({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+  const { category } = await searchParams;
+  return <TopPage pet="small" category={category} />;
 }

@@ -5,6 +5,7 @@ import { daysUntilJst, formatJst, MALL_LABEL } from "@/lib/format";
 import { PAUSED_MESSAGE, pricesPaused } from "@/lib/pause";
 import { dropRanking, pickups, popularRanking } from "@/lib/ranking";
 import { DealCard } from "./DealCard";
+import { categoryOptions, filterByCategory, pickCategory } from "@/lib/category";
 import { FeaturedDeal } from "./FeaturedDeal";
 import { MyPicks, type PickItem } from "./MyPicks";
 import { RankList } from "./RankList";
@@ -45,7 +46,7 @@ function EventBanner({ event, now }: { event: SaleEvent; now: Date }) {
   );
 }
 
-export async function TopPage({ pet }: { pet: Pet }) {
+export async function TopPage({ pet, category: rawCategory }: { pet: Pet; category?: string | string[] }) {
   if (pricesPaused()) {
     return (
       <div className="stack-lg">
@@ -60,7 +61,11 @@ export async function TopPage({ pet }: { pet: Pet }) {
 
   const data = getDataSource();
   const now = new Date();
-  const [items, events] = await Promise.all([data.getProductsForPet(pet), data.getUpcomingEvents(now)]);
+  const [allItems, events] = await Promise.all([data.getProductsForPet(pet), data.getUpcomingEvents(now)]);
+  // カテゴリは、このペットの商品にあるものだけを選べる（一覧は選んでも変わらない）
+  const options = categoryOptions(allItems);
+  const category = pickCategory(rawCategory, options);
+  const items = filterByCategory(allItems, category);
   const deals = buildDeals(items);
   const [top] = deals;
   const updatedAt = items.map((i) => i.fetchedAt).sort().at(-1);
@@ -88,6 +93,24 @@ export async function TopPage({ pet }: { pet: Pet }) {
       </div>
 
       {data.isMock && <p className="mock-notice">開発中：商品名・ショップ・価格はすべて仮のデータです。</p>}
+
+      {/* カテゴリで絞る（サーバーで動くフォーム。スクリプトがなくても使える） */}
+      {options.length > 1 && (
+        <form className="category-form" method="get" action={PET_HREF[pet]}>
+          <label className="field">
+            <span className="sub small">カテゴリ</span>
+            <select name="category" defaultValue={category ?? ""}>
+              <option value="">すべて</option>
+              {options.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button type="submit" className="button button-ghost">絞り込む</button>
+        </form>
+      )}
 
       {/* 2. 見出しは1行。答えは、そのすぐ下 */}
       <h1 className="top-title">いつものペット用品、今が買いどき？</h1>
